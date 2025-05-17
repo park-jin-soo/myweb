@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>채움 스댓공 고객조회기</title>
+  <style>
+    body { font-family: 'Noto Sans KR', sans-serif; max-width: 900px; margin: auto; padding: 20px; background: #f4f6f8; }
+    h1 { text-align: center; color: #2b4e84; }
+    .box, .admin-box { background: #fff; padding: 20px; margin-top: 20px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.05); }
+    input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+    button { background-color: #2b4e84; color: white; font-weight: bold; border: none; cursor: pointer; }
+    .result { margin-top: 15px; font-size: 16px; }
+    .red { color: red; }
+    .blue { color: blue; }
+    .admin-only { display: none; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .row > div { flex: 1; min-width: 150px; }
+    table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ccc; text-align: center; }
+    .footer { text-align: center; margin-top: 30px; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+<h1>채움 스댓공 고객 종료일 조회</h1>
+
+<div class="footer">💳 토스뱅크 1001 - 3085 - 3057 박진수 (20,000원)</div>
+
+<div class="box">
+  <h3>👤 고객 전용 조회</h3>
+  <input type="text" id="userSearch" placeholder="아이디 입력">
+  <button onclick="searchUser()">조회하기</button>
+  <div id="searchResult" class="result"></div>
+</div>
+
+<div class="box">
+  <h3>🔐 관리자 로그인</h3>
+  <input type="password" id="adminPass" placeholder="관리자 비밀번호 입력">
+  <button onclick="loginAdmin()">로그인</button>
+</div>
+
+<div id="adminPanel" class="admin-only admin-box">
+  <h3>📋 관리자 전용</h3>
+  <div class="row">
+    <div><input type="text" id="newId" placeholder="아이디 입력"></div>
+    <div><input type="date" id="startDate"></div>
+    <div><input type="date" id="endDate"></div>
+  </div>
+  <button onclick="addUser()">➕ 아이디 추가/수정</button>
+  <button onclick="saveToTxt()">💾 TXT로 저장</button>
+  <div id="memberCount" class="result"></div>
+  <table id="userTable">
+    <thead><tr><th>아이디</th><th>시작일</th><th>종료일</th><th>수정/삭제</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+const ADMIN_PASSWORD = "7702";
+let users = {
+  "meena77": {"start": "2025-05-01", "end": "2025-06-01"},
+  "meena1225": {"start": "2025-05-01", "end": "2025-06-01"},
+  "somsatag1225": {"start": "2025-05-01", "end": "2025-06-01"},
+  "mark1536": {"start": "2025-05-01", "end": "2025-06-01"},
+  "thebrightedu": {"start": "2025-05-01", "end": "2025-06-01"},
+  "korea_b0509": {"start": "2025-05-01", "end": "2025-06-01"},
+  "uyeong17": {"start": "2025-05-08", "end": "2025-06-08"},
+  "yglajiasr632": {"start": "2025-05-08", "end": "2025-06-08"},
+  "hellenjj": {"start": "2025-05-08", "end": "2025-06-08"},
+  "s016653": {"start": "2025-05-08", "end": "2025-06-08"},
+  "whiteyun8058": {"start": "2025-04-13", "end": "2025-05-16"},
+  "whiteyun901": {"start": "2025-04-13", "end": "2025-05-16"},
+  "jook2gg": {"start": "2025-04-15", "end": "2025-05-16"},
+  "ussua": {"start": "2025-04-15", "end": "2025-05-16"},
+  "chorog-": {"start": "2025-04-15", "end": "2025-05-16"},
+  "aa--dd": {"start": "2025-05-15", "end": "2025-06-15"},
+  "school999-": {"start": "2025-04-14", "end": "2025-05-16"},
+  "hge319": {"start": "2025-04-23", "end": "2025-05-23"},
+  "unk1472": {"start": "2025-04-23", "end": "2025-05-23"},
+  "eg6404": {"start": "2025-04-23", "end": "2025-05-23"},
+  "sado44": {"start": "2025-04-26", "end": "2025-05-26"},
+  "na_english": {"start": "2025-04-27", "end": "2025-05-27"},
+  "ymmath00": {"start": "2025-04-28", "end": "2025-05-28"},
+  "epic_study": {"start": "2025-04-29", "end": "2025-05-29"},
+  "aty0000": {"start": "2025-04-29", "end": "2025-05-29"}
+};
+
+function searchUser() {
+  const id = document.getElementById("userSearch").value.trim();
+  const box = document.getElementById("searchResult");
+  if (!id) return box.innerHTML = "<span class='red'>아이디를 입력해주세요.</span>";
+  const user = users[id];
+  if (!user) return box.innerHTML = "<span class='red'>등록되지 않은 아이디입니다.</span>";
+  const today = new Date();
+  const end = new Date(user.end);
+  const diff = Math.ceil((end - today) / (1000*60*60*24));
+  let msg = `✅ <b class='blue'>아이디:</b> ${id}<br>📅 <b>시작일:</b> ${user.start}<br>📅 <b>종료일:</b> ${user.end}<br>`;
+  msg += diff > 0 ? `<span class='red'>⏳ 종료일까지 ${diff}일 남았습니다.</span>` :
+                    `<span class='red'>🔒 종료되었습니다. 입금 후 카톡 맨션 주세요.</span>`;
+  box.innerHTML = msg;
+}
+
+function loginAdmin() {
+  const pw = document.getElementById("adminPass").value.trim();
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById("adminPanel").style.display = "block";
+    loadTable();
+  } else {
+    alert("비밀번호가 틀렸습니다.");
+  }
+}
+
+function addUser() {
+  const id = document.getElementById("newId").value.trim();
+  const start = document.getElementById("startDate").value;
+  const end = document.getElementById("endDate").value;
+  if (!id || !start || !end) return alert("모든 항목을 입력하세요.");
+  users[id] = { start, end };
+  loadTable();
+}
+
+function editUser(id) {
+  document.getElementById("newId").value = id;
+  document.getElementById("startDate").value = users[id].start;
+  document.getElementById("endDate").value = users[id].end;
+}
+
+function deleteUser(id) {
+  if (confirm(id + "을(를) 삭제할까요?")) {
+    delete users[id];
+    loadTable();
+  }
+}
+
+function loadTable() {
+  const body = document.querySelector("#userTable tbody");
+  body.innerHTML = "";
+  const keys = Object.keys(users).sort();
+  document.getElementById("memberCount").innerText = "총 회원 수 : " + keys.length + " 명";
+  keys.forEach(id => {
+    const row = `<tr>
+      <td>${id}</td>
+      <td>${users[id].start}</td>
+      <td>${users[id].end}</td>
+      <td>
+        <button onclick="editUser('${id}')">수정</button>
+        <button onclick="deleteUser('${id}')">삭제</button>
+      </td>
+    </tr>`;
+    body.innerHTML += row;
+  });
+}
+
+function saveToTxt() {
+  const keys = Object.keys(users);
+  let text = "아이디\t시작일\t종료일\\n";
+  keys.forEach(id => {
+    text += `${id}\\t${users[id].start}\\t${users[id].end}\\n`;
+  });
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const today = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = "회원목록_" + today + ".txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+</script>
+</body>
+</html>
