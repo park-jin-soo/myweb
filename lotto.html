@@ -62,6 +62,7 @@
         .round-number {
             color: #ff0080;
             text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080;
+            font-size: 1.4rem; /* 크기 확대 */
         }
 
         @keyframes glow {
@@ -71,7 +72,7 @@
 
         .main-title {
             font-family: 'Orbitron', monospace;
-            font-size: 2.8rem;
+            font-size: 2.6rem; /* 크기 축소 */
             font-weight: 900;
             background: linear-gradient(45deg, #ff006e, #fb5607, #ffbe0b, #8338ec, #3a86ff);
             background-size: 400% 400%;
@@ -173,12 +174,13 @@
         .button-group {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px; /* 버튼 간격 조정 */
             flex-wrap: wrap;
         }
 
         .neon-btn {
-            position: relative; padding: 15px 30px; font-size: 1.1rem;
+            position: relative; padding: 15px 25px; /* 패딩 조정 */
+            font-size: 1.0rem; /* 폰트 크기 조정 */
             font-weight: 700; background: transparent; border: 2px solid;
             border-radius: 50px; cursor: pointer; overflow: hidden;
             transition: all 0.3s ease; font-family: 'Orbitron', monospace;
@@ -200,7 +202,6 @@
             display: none;
         }
 
-
         .neon-btn:before {
             content: ''; position: absolute; top: 0; left: -100%;
             width: 100%; height: 100%;
@@ -218,6 +219,10 @@
         
         .btn-clear { color: #ff4500; border-color: #ff4500; box-shadow: 0 0 20px rgba(255, 69, 0, 0.3); }
         .btn-clear:hover { background: rgba(255, 69, 0, 0.1); box-shadow: 0 0 30px rgba(255, 69, 0, 0.6), inset 0 0 30px rgba(255, 69, 0, 0.1); transform: translateY(-2px); }
+
+        .btn-check { color: #ffd700; border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+        .btn-check:hover { background: rgba(255, 215, 0, 0.1); box-shadow: 0 0 30px rgba(255, 215, 0, 0.7), inset 0 0 30px rgba(255, 215, 0, 0.2); transform: translateY(-2px); }
+
 
         .external-link-section {
             margin-top: 30px;
@@ -306,7 +311,7 @@
         @media (max-width: 768px) {
             .main-title { font-size: 2.2rem; }
             .button-group { flex-direction: column; align-items: center; }
-            .neon-btn { width: 250px; }
+            .neon-btn { width: 250px; margin-bottom: 10px; }
             .neon-ball { width: 50px; height: 50px; font-size: 1.1rem; }
             .balls-row { gap: 8px; }
             #manual-numbers-input { width: 95%; }
@@ -348,6 +353,9 @@
                     <button class="neon-btn btn-10" onclick="generateLotto(10)">
                         10개 조합 생성
                     </button>
+                    <a href="https://rich-man-woman.tistory.com/entry/%EB%A1%9C%EB%98%90%EB%B2%88%ED%98%B8%ED%99%95%EC%9D%B8-%EC%A7%80%EB%82%9C%EC%A3%BC-%EB%A1%9C%EB%98%90-%EB%8B%B9%EC%B2%A8%EB%B2%88%ED%98%B8%EC%99%80-%EC%83%81%EA%B8%88-%EA%B0%80%EC%9E%A5-%EB%B9%A0%EB%A5%B4%EA%B2%8C-%ED%99%95%EC%9D%B8%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95" target="_blank" rel="noopener noreferrer" class="neon-btn btn-check">
+                        당첨번호 확인
+                    </a>
                     <button class="neon-btn btn-clear" onclick="clearResults()">
                         결과 지우기
                     </button>
@@ -399,19 +407,25 @@
         });
         
         function updateRoundInfo() {
-            const baseRound = 1175;
-            const baseDate = new Date('2025-06-07T23:59:59');
+            const baseRound = 1121;
+            const baseDate = new Date('2024-05-25T21:00:00');
+
             const today = new Date();
             const timeDiff = today.getTime() - baseDate.getTime();
-            const weeksDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24 * 7));
-            const currentRound = baseRound + weeksDiff;
+            
+            const weeksDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
+            
+            const currentRound = baseRound + weeksDiff + 1;
+
             const drawDate = new Date(baseDate);
-            drawDate.setDate(baseDate.getDate() + weeksDiff * 7);
+            drawDate.setDate(baseDate.getDate() + (weeksDiff + 1) * 7);
+
             const year = drawDate.getFullYear();
             const month = String(drawDate.getMonth() + 1).padStart(2, '0');
             const day = String(drawDate.getDate()).padStart(2, '0');
             document.getElementById('roundInfo').innerHTML = `${year}년 ${month}월 ${day}일<br><span class="round-number">제 ${currentRound}회</span>`;
         }
+
 
         function getRandomNumbers() {
             const numbers = new Set();
@@ -485,7 +499,6 @@
                 return;
             }
             
-            // 생성하려는 개수가 남은 개수보다 많으면 생성하지 않음
             if (totalGeneratedCount + count > 10) {
                 alert(`최대 10개까지 생성할 수 있습니다. 앞으로 ${10 - totalGeneratedCount}개만 더 생성할 수 있습니다.`);
                 return;
