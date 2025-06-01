@@ -71,7 +71,7 @@
 
         .main-title {
             font-family: 'Orbitron', monospace;
-            font-size: 2.8rem; /* 글씨 크기 조정 */
+            font-size: 2.8rem;
             font-weight: 900;
             background: linear-gradient(45deg, #ff006e, #fb5607, #ffbe0b, #8338ec, #3a86ff);
             background-size: 400% 400%;
@@ -185,6 +185,21 @@
             text-transform: uppercase; letter-spacing: 1px;
             text-decoration: none;
         }
+        .neon-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            color: #888 !important;
+            border-color: #555 !important;
+            box-shadow: none !important;
+        }
+        .neon-btn:disabled:hover {
+            transform: none;
+            background: transparent;
+        }
+        .neon-btn:disabled:before {
+            display: none;
+        }
+
 
         .neon-btn:before {
             content: ''; position: absolute; top: 0; left: -100%;
@@ -227,6 +242,14 @@
             color: #ccc;
             line-height: 1.5;
             font-size: 0.9rem;
+        }
+
+        #limit-message {
+            color: #ff4500;
+            margin-top: 20px;
+            font-weight: bold;
+            line-height: 1.6;
+            text-shadow: 0 0 8px rgba(255, 69, 0, 0.7);
         }
 
         .results-section {
@@ -331,12 +354,15 @@
                 </div>
 
                 <div class="external-link-section">
-                    <a href="https://rich-man-woman.tistory.com/entry/%EC%9D%B4%EB%B2%88-%EC%A3%BC-%EB%A1%9C%EB%98%90-1175%ED%9A%8C-%EB%8B%B9%EC%B2%A8-%ED%99%95%EB%A5%A0-%EB%86%92%EC%9D%B4%EB%8A%94-%EB%B6%84%EC%84%9D-%ED%8C%81%EA%B3%BC-%EC%B6%94%EC%B6%9C%EA%B8%B0" target="_blank" rel="noopener noreferrer" class="neon-btn btn-link">
-                        🔗 분석 보러가기
+                    <a href="https://rich-man-woman.tistory.com/entry/%EC%9D%B4%EB%B2%88-%EC%A3%BC-%EB%A1%9C%EB%98%90-1175%ED%9A%8C-%EB%8B%B9%EC%B2%A8-%ED%99%95%EB%A5%A0-%EB%86%92%EC%9D%B4%EB%8A%94-%EB%B6%84%EC%84%9D-%ED%8C%81%EA%B3%BC-%EC%B6%94%EC%B6%9C%EA%B8%B0" target="_blank" rel="noopener noreferrer" class="neon-btn btn-link" onclick="resetGenerationLimit()">
+                        블로그 보러 가기
                     </a>
                     <p class="link-description">
                         10조합후 위 링크로<br>갔다가 다시오세요
                     </p>
+                </div>
+                <div id="limit-message" style="display: none;">
+                    10개 조합을 모두 생성했습니다.<br>추가 생성을 원하시면 '블로그 보러 가기' 버튼을 눌러주세요.
                 </div>
             </div>
 
@@ -355,12 +381,14 @@
         const fortuneQuotes = [
             "행운은 준비된 자에게<br>찾아온다", "꿈을 믿는 자만이<br>꿈을 이룬다", "오늘이 당신의 운명을<br>바꿀 날이다", "기회는 항상 준비된 마음에<br>온다", "성공은 우연이 아닌<br>필연이다", "당신의 미래는<br>지금 시작된다", "희망을 품고 도전하는 자가<br>승리한다", "믿음이 있는 곳에<br>기적이 일어난다", "인생은 한 번뿐<br>과감히 도전하라", "열정이 있는 자에게<br>불가능은 없다"
         ];
+        
         let combinationCount = 0;
+        let totalGeneratedCount = 0;
         let quoteIndex = 0;
         
         document.addEventListener('DOMContentLoaded', () => {
             updateRoundInfo();
-            updateQuote(); // 페이지 로드 시 첫 명언 표시
+            updateQuote(); 
 
             document.querySelectorAll('input[name="generationMode"]').forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -435,9 +463,40 @@
             }, 300);
         }
 
+        function checkAndToggleButtons() {
+            const btn5 = document.querySelector('.btn-5');
+            const btn10 = document.querySelector('.btn-10');
+            const limitMessage = document.getElementById('limit-message');
+
+            if (totalGeneratedCount >= 10) {
+                btn5.disabled = true;
+                btn10.disabled = true;
+                limitMessage.style.display = 'block';
+            } else {
+                btn5.disabled = false;
+                btn10.disabled = false;
+                limitMessage.style.display = 'none';
+            }
+        }
+
         function generateLotto(count) {
-            combinationCount = 0; // 버튼 클릭 시 항상 카운트 초기화
+            if (totalGeneratedCount >= 10) {
+                alert("10개 조합을 모두 생성했습니다. 추가 생성을 원하시면 '블로그 보러 가기'를 클릭하여 제한을 해제해주세요.");
+                return;
+            }
+            
+            // 생성하려는 개수가 남은 개수보다 많으면 생성하지 않음
+            if (totalGeneratedCount + count > 10) {
+                alert(`최대 10개까지 생성할 수 있습니다. 앞으로 ${10 - totalGeneratedCount}개만 더 생성할 수 있습니다.`);
+                return;
+            }
+
             const resultsDiv = document.getElementById('results');
+            if (totalGeneratedCount === 0) {
+                resultsDiv.innerHTML = ''; 
+                combinationCount = 0;
+            }
+            
             const mode = document.querySelector('input[name="generationMode"]:checked').value;
             let fixedNumbers = [];
 
@@ -447,24 +506,20 @@
                     alert('수동 조합을 선택하셨습니다. 고정할 번호를 1개 이상 입력해주세요.');
                     return;
                 }
-                
                 const rawNumbers = inputStr.split(',').map(s => parseInt(s.trim(), 10));
                 const validNumberSet = new Set();
-
                 for (const num of rawNumbers) {
                     if (!isNaN(num) && num >= 1 && num <= 45) {
                         validNumberSet.add(num);
                     }
                 }
-                
                 if (validNumberSet.size > 4) {
                     alert('고정 번호는 최대 4개까지만 입력할 수 있습니다.');
                     return;
                 }
                 fixedNumbers = Array.from(validNumberSet);
             }
-
-            resultsDiv.innerHTML = ''; // 기존 결과 지우기
+            
             updateQuote();
             createSparkles();
 
@@ -481,15 +536,31 @@
                         `<div class="neon-ball ${getBallClass(num)}">${num}</div>`
                     ).join('');
                     
-                    // combinationCount를 여기서 증가시키고 라벨에 사용
                     combinationCount++;
+                    totalGeneratedCount++;
+
                     setDiv.innerHTML = `
                         <div class="set-label">조합 ${combinationCount}</div>
                         <div class="balls-row">${ballsHtml}</div>
                     `;
                     
                     resultsDiv.appendChild(setDiv);
+
+                    if (i === count - 1) {
+                       checkAndToggleButtons();
+                    }
+
                 }, i * 100);
+            }
+        }
+
+        function resetGenerationLimit() {
+            alert('조합 생성 제한이 초기화되었습니다. 다시 10개까지 생성할 수 있습니다.');
+            totalGeneratedCount = 0;
+            if (confirm('기존에 생성된 번호 목록도 모두 지우시겠습니까?')) {
+                clearResults();
+            } else {
+                checkAndToggleButtons();
             }
         }
 
@@ -497,8 +568,10 @@
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = `<div class="empty-state">버튼을 눌러 행운의 번호를 생성해보세요</div>`;
             combinationCount = 0;
+            totalGeneratedCount = 0; 
             quoteIndex = 0;
             updateQuote();
+            checkAndToggleButtons();
         }
 
         setInterval(updateQuote, 10000);
