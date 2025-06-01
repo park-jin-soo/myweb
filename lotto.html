@@ -55,7 +55,13 @@
             color: #00ffff;
             text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
             margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite alternate;
+            line-height: 1.6;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+        
+        .round-number {
+            color: #ff0080;
+            text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080;
         }
 
         @keyframes glow {
@@ -65,7 +71,7 @@
 
         .main-title {
             font-family: 'Orbitron', monospace;
-            font-size: 3rem;
+            font-size: 2.8rem; /* 글씨 크기 조정 */
             font-weight: 900;
             background: linear-gradient(45deg, #ff006e, #fb5607, #ffbe0b, #8338ec, #3a86ff);
             background-size: 400% 400%;
@@ -96,6 +102,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            line-height: 1.5;
             animation: fadeInOut 4s ease-in-out infinite;
         }
 
@@ -176,6 +183,7 @@
             border-radius: 50px; cursor: pointer; overflow: hidden;
             transition: all 0.3s ease; font-family: 'Orbitron', monospace;
             text-transform: uppercase; letter-spacing: 1px;
+            text-decoration: none;
         }
 
         .neon-btn:before {
@@ -195,6 +203,31 @@
         
         .btn-clear { color: #ff4500; border-color: #ff4500; box-shadow: 0 0 20px rgba(255, 69, 0, 0.3); }
         .btn-clear:hover { background: rgba(255, 69, 0, 0.1); box-shadow: 0 0 30px rgba(255, 69, 0, 0.6), inset 0 0 30px rgba(255, 69, 0, 0.1); transform: translateY(-2px); }
+
+        .external-link-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-link {
+            color: #9370db;
+            border-color: #9370db;
+            box-shadow: 0 0 20px rgba(147, 112, 219, 0.4);
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .btn-link:hover {
+            background: rgba(147, 112, 219, 0.1);
+            box-shadow: 0 0 30px rgba(147, 112, 219, 0.7), inset 0 0 30px rgba(147, 112, 219, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .link-description {
+            color: #ccc;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
 
         .results-section {
             background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px);
@@ -248,7 +281,7 @@
         @keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1); } }
 
         @media (max-width: 768px) {
-            .main-title { font-size: 2rem; }
+            .main-title { font-size: 2.2rem; }
             .button-group { flex-direction: column; align-items: center; }
             .neon-btn { width: 250px; }
             .neon-ball { width: 50px; height: 50px; font-size: 1.1rem; }
@@ -263,20 +296,20 @@
         <div class="container">
             <div class="header">
                 <div class="round-info" id="roundInfo"></div>
-                <h1 class="main-title">✨ 조합 생성기 ✨</h1>
-                <p class="subtitle">당신의 인생을 바꿀 번호가 여기에</p>
-                <div class="fortune-quote" id="fortuneQuote">🍀 행운은 준비된 자에게 찾아온다 🍀</div>
+                <h1 class="main-title">로또 조합 생성기</h1>
+                <p class="subtitle">당신의 인생을 바꿀 번호는?</p>
+                <div class="fortune-quote" id="fortuneQuote"></div>
             </div>
 
             <div class="control-panel">
                 <div class="mode-selection">
                     <label>
                         <input type="radio" name="generationMode" value="auto" checked>
-                        <span>🤖 자동 생성</span>
+                        <span>자동 생성</span>
                     </label>
                     <label>
                         <input type="radio" name="generationMode" value="manual">
-                        <span>✍️ 수동 조합</span>
+                        <span>수동 조합</span>
                     </label>
                 </div>
                 
@@ -287,22 +320,31 @@
 
                 <div class="button-group">
                     <button class="neon-btn btn-5" onclick="generateLotto(5)">
-                        ⚡ 5개 조합 생성 ⚡
+                        5개 조합 생성
                     </button>
                     <button class="neon-btn btn-10" onclick="generateLotto(10)">
-                        💫 10개 조합 생성 💫
+                        10개 조합 생성
                     </button>
                     <button class="neon-btn btn-clear" onclick="clearResults()">
-                        🗑️ 결과 지우기 🗑️
+                        결과 지우기
                     </button>
+                </div>
+
+                <div class="external-link-section">
+                    <a href="https://rich-man-woman.tistory.com/entry/%EC%9D%B4%EB%B2%88-%EC%A3%BC-%EB%A1%9C%EB%98%90-1175%ED%9A%8C-%EB%8B%B9%EC%B2%A8-%ED%99%95%EB%A5%A0-%EB%86%92%EC%9D%B4%EB%8A%94-%EB%B6%84%EC%84%9D-%ED%8C%81%EA%B3%BC-%EC%B6%94%EC%B6%9C%EA%B8%B0" target="_blank" rel="noopener noreferrer" class="neon-btn btn-link">
+                        🔗 분석 보러가기
+                    </a>
+                    <p class="link-description">
+                        10조합후 위 링크로<br>갔다가 다시오세요
+                    </p>
                 </div>
             </div>
 
             <div class="results-section">
-                <h2 class="results-title">🎰 생성된 조합 🎰</h2>
+                <h2 class="results-title">생성된 조합</h2>
                 <div id="results">
                     <div class="empty-state">
-                        ✨ 버튼을 눌러 행운의 번호를 생성해보세요 ✨
+                        버튼을 눌러 행운의 번호를 생성해보세요
                     </div>
                 </div>
             </div>
@@ -311,23 +353,19 @@
 
     <script>
         const fortuneQuotes = [
-            "🍀 행운은 준비된 자에게 찾아온다 🍀", "⭐ 꿈을 믿는 자만이 꿈을 이룬다 ⭐", "🌟 오늘이 당신의 운명을 바꿀 날이다 🌟", "💎 기회는 항상 준비된 마음에 온다 💎", "🎯 성공은 우연이 아닌 필연이다 🎯", "🚀 당신의 미래는 지금 시작된다 🚀", "🌈 희망을 품고 도전하는 자가 승리한다 🌈", "💫 믿음이 있는 곳에 기적이 일어난다 💫", "🎪 인생은 한 번뿐, 과감히 도전하라 🎪", "🔥 열정이 있는 자에게 불가능은 없다 🔥"
+            "행운은 준비된 자에게<br>찾아온다", "꿈을 믿는 자만이<br>꿈을 이룬다", "오늘이 당신의 운명을<br>바꿀 날이다", "기회는 항상 준비된 마음에<br>온다", "성공은 우연이 아닌<br>필연이다", "당신의 미래는<br>지금 시작된다", "희망을 품고 도전하는 자가<br>승리한다", "믿음이 있는 곳에<br>기적이 일어난다", "인생은 한 번뿐<br>과감히 도전하라", "열정이 있는 자에게<br>불가능은 없다"
         ];
         let combinationCount = 0;
         let quoteIndex = 0;
         
         document.addEventListener('DOMContentLoaded', () => {
             updateRoundInfo();
+            updateQuote(); // 페이지 로드 시 첫 명언 표시
 
-            // 모드 선택 라디오 버튼 이벤트 리스너 추가
             document.querySelectorAll('input[name="generationMode"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     const manualInputSection = document.getElementById('manual-input-section');
-                    if (this.value === 'manual') {
-                        manualInputSection.style.display = 'block';
-                    } else {
-                        manualInputSection.style.display = 'none';
-                    }
+                    manualInputSection.style.display = (this.value === 'manual') ? 'block' : 'none';
                 });
             });
         });
@@ -344,20 +382,17 @@
             const year = drawDate.getFullYear();
             const month = String(drawDate.getMonth() + 1).padStart(2, '0');
             const day = String(drawDate.getDate()).padStart(2, '0');
-            document.getElementById('roundInfo').textContent = `${year}년 ${month}월 ${day}일 제 ${currentRound}회`;
+            document.getElementById('roundInfo').innerHTML = `${year}년 ${month}월 ${day}일<br><span class="round-number">제 ${currentRound}회</span>`;
         }
 
-        // 자동 (완전 랜덤) 번호 생성
         function getRandomNumbers() {
             const numbers = new Set();
             while (numbers.size < 6) {
-                const num = Math.floor(Math.random() * 45) + 1;
-                numbers.add(num);
+                numbers.add(Math.floor(Math.random() * 45) + 1);
             }
             return Array.from(numbers).sort((a, b) => a - b);
         }
 
-        // 수동 (고정 번호 포함) 번호 생성
         function getRandomNumbersWithFixed(fixedNumbers) {
             const numbers = new Set(fixedNumbers);
             while (numbers.size < 6) {
@@ -394,13 +429,14 @@
             const quoteElement = document.getElementById('fortuneQuote');
             quoteElement.style.opacity = '0';
             setTimeout(() => {
-                quoteElement.textContent = fortuneQuotes[quoteIndex];
+                quoteElement.innerHTML = fortuneQuotes[quoteIndex];
                 quoteElement.style.opacity = '1';
                 quoteIndex = (quoteIndex + 1) % fortuneQuotes.length;
             }, 300);
         }
 
         function generateLotto(count) {
+            combinationCount = 0; // 버튼 클릭 시 항상 카운트 초기화
             const resultsDiv = document.getElementById('results');
             const mode = document.querySelector('input[name="generationMode"]:checked').value;
             let fixedNumbers = [];
@@ -428,10 +464,7 @@
                 fixedNumbers = Array.from(validNumberSet);
             }
 
-            if (resultsDiv.innerHTML.includes('empty-state')) {
-                resultsDiv.innerHTML = '';
-            }
-
+            resultsDiv.innerHTML = ''; // 기존 결과 지우기
             updateQuote();
             createSparkles();
 
@@ -448,20 +481,21 @@
                         `<div class="neon-ball ${getBallClass(num)}">${num}</div>`
                     ).join('');
                     
+                    // combinationCount를 여기서 증가시키고 라벨에 사용
+                    combinationCount++;
                     setDiv.innerHTML = `
-                        <div class="set-label">✨ 조합 ${combinationCount + i + 1} ✨</div>
+                        <div class="set-label">조합 ${combinationCount}</div>
                         <div class="balls-row">${ballsHtml}</div>
                     `;
                     
                     resultsDiv.appendChild(setDiv);
-                }, i * 200);
+                }, i * 100);
             }
-            combinationCount += count;
         }
 
         function clearResults() {
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `<div class="empty-state">✨ 버튼을 눌러 행운의 번호를 생성해보세요 ✨</div>`;
+            resultsDiv.innerHTML = `<div class="empty-state">버튼을 눌러 행운의 번호를 생성해보세요</div>`;
             combinationCount = 0;
             quoteIndex = 0;
             updateQuote();
