@@ -35,6 +35,76 @@
             }
         }
 
+        /* --- 로그인 화면 스타일 --- */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        #login-box {
+            background: rgba(20, 20, 20, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        #login-box h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            margin-bottom: 25px;
+        }
+
+        #password-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 5px;
+            margin-bottom: 25px;
+        }
+        
+        #login-box .button-group {
+             flex-direction: column;
+             gap: 15px;
+        }
+
+        .admin-btn {
+            font-size: 0.9rem;
+            color: #aaa;
+            background: none;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .admin-btn:hover {
+            color: #fff;
+        }
+        
+        #main-content {
+            display: none; /* 초기에는 생성기 숨김 */
+        }
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -125,7 +195,6 @@
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
         }
 
         .neon-btn {
@@ -157,6 +226,19 @@
 
         .neon-btn:hover:before {
             left: 100%;
+        }
+        
+        .btn-login {
+            color: #00ffff;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            width: 250px;
+        }
+
+        .btn-login:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .btn-5 {
@@ -294,35 +376,11 @@
             }
         }
 
-        .ball-1-10 {
-            color: #ffd700;
-            border-color: #ffd700;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
-        }
-
-        .ball-11-20 {
-            color: #00bfff;
-            border-color: #00bfff;
-            background: radial-gradient(circle at 30% 30%, rgba(0, 191, 255, 0.3), rgba(0, 191, 255, 0.1));
-        }
-
-        .ball-21-30 {
-            color: #ff1493;
-            border-color: #ff1493;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 20, 147, 0.3), rgba(255, 20, 147, 0.1));
-        }
-
-        .ball-31-40 {
-            color: #9370db;
-            border-color: #9370db;
-            background: radial-gradient(circle at 30% 30%, rgba(147, 112, 219, 0.3), rgba(147, 112, 219, 0.1));
-        }
-
-        .ball-41-45 {
-            color: #00ff7f;
-            border-color: #00ff7f;
-            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 127, 0.3), rgba(0, 255, 127, 0.1));
-        }
+        .ball-1-10 { color: #ffd700; border-color: #ffd700; background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1)); }
+        .ball-11-20 { color: #00bfff; border-color: #00bfff; background: radial-gradient(circle at 30% 30%, rgba(0, 191, 255, 0.3), rgba(0, 191, 255, 0.1)); }
+        .ball-21-30 { color: #ff1493; border-color: #ff1493; background: radial-gradient(circle at 30% 30%, rgba(255, 20, 147, 0.3), rgba(255, 20, 147, 0.1)); }
+        .ball-31-40 { color: #9370db; border-color: #9370db; background: radial-gradient(circle at 30% 30%, rgba(147, 112, 219, 0.3), rgba(147, 112, 219, 0.1)); }
+        .ball-41-45 { color: #00ff7f; border-color: #00ff7f; background: radial-gradient(circle at 30% 30%, rgba(0, 255, 127, 0.3), rgba(0, 255, 127, 0.1)); }
 
         .empty-state {
             text-align: center;
@@ -353,59 +411,56 @@
         }
 
         @media (max-width: 768px) {
-            .main-title {
-                font-size: 2rem;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .neon-btn {
-                width: 250px;
-            }
-            
-            .neon-ball {
-                width: 50px;
-                height: 50px;
-                font-size: 1.1rem;
-            }
-            
-            .balls-row {
-                gap: 8px;
-            }
+            .main-title { font-size: 2rem; }
+            .button-group { flex-direction: column; align-items: center; }
+            .neon-btn { width: 250px; }
+            .neon-ball { width: 50px; height: 50px; font-size: 1.1rem; }
+            .balls-row { gap: 8px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="round-info" id="roundInfo">제 1175회 로또</div>
-            <h1 class="main-title">✨ 자동 조합 생성기 ✨</h1>
-            <p class="subtitle">당신의 인생을 바꿀 번호가 여기에</p>
-            <div class="fortune-quote" id="fortuneQuote">🍀 행운은 준비된 자에게 찾아온다 🍀</div>
-        </div>
 
-        <div class="control-panel">
-            <div class="button-group">
-                <button class="neon-btn btn-5" onclick="generateLotto(5)" id="btn5">
-                    ⚡ 5개 조합 생성 ⚡
-                </button>
-                <button class="neon-btn btn-10" onclick="generateLotto(10)" id="btn10">
-                    💫 10개 조합 생성 💫
-                </button>
-                <button class="neon-btn btn-clear" onclick="clearResults()">
-                    🗑️ 결과 지우기 🗑️
-                </button>
+    <div id="login-screen">
+        <div id="login-box">
+             <h2>🔒 비밀번호 입력 🔒</h2>
+             <input type="password" id="password-input" maxlength="4" placeholder="••••">
+             <div class="button-group">
+                <button class="neon-btn btn-login" onclick="checkPassword()">⚡ 입장하기 ⚡</button>
+             </div>
+             <button class="admin-btn" onclick="openAdminPanel()">관리자 설정</button>
+        </div>
+    </div>
+    
+    <div id="main-content">
+        <div class="container">
+            <div class="header">
+                <div class="round-info" id="roundInfo"></div>
+                <h1 class="main-title">✨ 자동 조합 생성기 ✨</h1>
+                <p class="subtitle">당신의 인생을 바꿀 번호가 여기에</p>
+                <div class="fortune-quote" id="fortuneQuote">🍀 행운은 준비된 자에게 찾아온다 🍀</div>
             </div>
-        </div>
 
-        <div class="results-section">
-            <h2 class="results-title">🎰 생성된 조합 🎰</h2>
-            <div id="results">
-                <div class="empty-state">
-                    ✨ 버튼을 눌러 행운의 번호를 생성해보세요 ✨
+            <div class="control-panel">
+                <div class="button-group">
+                    <button class="neon-btn btn-5" onclick="generateLotto(5)" id="btn5">
+                        ⚡ 5개 조합 생성 ⚡
+                    </button>
+                    <button class="neon-btn btn-10" onclick="generateLotto(10)" id="btn10">
+                        💫 10개 조합 생성 💫
+                    </button>
+                    <button class="neon-btn btn-clear" onclick="clearResults()">
+                        🗑️ 결과 지우기 🗑️
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2 class="results-title">🎰 생성된 조합 🎰</h2>
+                <div id="results">
+                    <div class="empty-state">
+                        ✨ 버튼을 눌러 행운의 번호를 생성해보세요 ✨
+                    </div>
                 </div>
             </div>
         </div>
@@ -413,51 +468,96 @@
 
     <script>
         const fortuneQuotes = [
-            "🍀 행운은 준비된 자에게 찾아온다 🍀",
-            "⭐ 꿈을 믿는 자만이 꿈을 이룬다 ⭐",
-            "🌟 오늘이 당신의 운명을 바꿀 날이다 🌟",
-            "💎 기회는 항상 준비된 마음에 온다 💎",
-            "🎯 성공은 우연이 아닌 필연이다 🎯",
-            "🚀 당신의 미래는 지금 시작된다 🚀",
-            "🌈 희망을 품고 도전하는 자가 승리한다 🌈",
-            "💫 믿음이 있는 곳에 기적이 일어난다 💫",
-            "🎪 인생은 한 번뿐, 과감히 도전하라 🎪",
-            "🔥 열정이 있는 자에게 불가능은 없다 🔥"
+            "🍀 행운은 준비된 자에게 찾아온다 🍀", "⭐ 꿈을 믿는 자만이 꿈을 이룬다 ⭐", "🌟 오늘이 당신의 운명을 바꿀 날이다 🌟", "💎 기회는 항상 준비된 마음에 온다 💎", "🎯 성공은 우연이 아닌 필연이다 🎯", "🚀 당신의 미래는 지금 시작된다 🚀", "🌈 희망을 품고 도전하는 자가 승리한다 🌈", "💫 믿음이 있는 곳에 기적이 일어난다 💫", "🎪 인생은 한 번뿐, 과감히 도전하라 🎪", "🔥 열정이 있는 자에게 불가능은 없다 🔥"
         ];
 
         let combinationCount = 0;
         let quoteIndex = 0;
+        
+        // --- 페이지 로드 시 실행될 함수 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 사용자 비밀번호가 없으면 기본 '1234'로 설정
+            if (!localStorage.getItem('lottoUserPassword')) {
+                localStorage.setItem('lottoUserPassword', '1234');
+            }
+            
+            // 비밀번호 입력 필드에서 Enter 키를 누르면 입장 시도
+            document.getElementById('password-input').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    checkPassword();
+                }
+            });
 
-        // 회차 계산 (2024년 5월 31일이 1174회, 매주 토요일)
-        function getCurrentRound() {
-            const baseDate = new Date('2024-05-31'); // 1174회 날짜
-            const baseRound = 1174;
-            const today = new Date();
-            
-            // 다음 토요일 계산
-            const daysUntilSaturday = (6 - today.getDay()) % 7;
-            const nextSaturday = new Date(today);
-            nextSaturday.setDate(today.getDate() + daysUntilSaturday);
-            
-            // 기준 날짜로부터 몇 주 지났는지 계산
-            const timeDiff = nextSaturday.getTime() - baseDate.getTime();
-            const weeksDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
-            
-            return baseRound + weeksDiff;
+            // 회차 정보 로드
+            updateRoundInfo();
+        });
+        
+        // --- 비밀번호 관련 함수 ---
+        function checkPassword() {
+            const inputPassword = document.getElementById('password-input').value;
+            const storedPassword = localStorage.getItem('lottoUserPassword');
+
+            if (inputPassword === storedPassword) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                alert('비밀번호가 틀렸습니다.');
+                document.getElementById('password-input').value = '';
+            }
+        }
+        
+        function openAdminPanel() {
+            const adminPassword = prompt('관리자 비밀번호를 입력하세요:');
+            if (adminPassword === '7702') {
+                let newUserPassword = prompt('새로운 4자리 사용자 비밀번호를 입력하세요:', '1234');
+                
+                // 사용자가 취소를 누르지 않았고, 4자리 숫자인지 검사
+                if (newUserPassword && newUserPassword.length === 4 && !isNaN(newUserPassword)) {
+                    localStorage.setItem('lottoUserPassword', newUserPassword);
+                    alert(`사용자 비밀번호가 '${newUserPassword}'로 변경되었습니다.`);
+                } else if(newUserPassword !== null) { // 취소가 아닌 잘못된 입력
+                    alert('비밀번호는 반드시 4자리 숫자여야 합니다.');
+                }
+            } else if (adminPassword !== null) { // 취소가 아닌 잘못된 입력
+                alert('관리자 비밀번호가 틀렸습니다.');
+            }
         }
 
-        // 페이지 로드시 회차 업데이트
-        document.getElementById('roundInfo').textContent = `제 ${getCurrentRound()}회 로또`;
+        // --- 회차 계산 함수 (수정됨) ---
+        function updateRoundInfo() {
+            // 기준 정보: 2025년 6월 7일은 1175회 추첨일 (토요일)
+            const baseRound = 1175;
+            const baseDate = new Date('2025-06-07T23:59:59'); // 기준 회차의 토요일
+
+            const today = new Date();
+            
+            // 기준일로부터 오늘까지의 시간 차이(밀리초)
+            const timeDiff = today.getTime() - baseDate.getTime();
+
+            // 시간 차이를 주로 변환 (일요일에 회차가 바뀌므로, 토요일 자정 이후를 기준으로 계산)
+            // Math.ceil을 사용하여 일요일 00:00부터 다음 주로 카운트
+            const weeksDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24 * 7));
+            
+            const currentRound = baseRound + weeksDiff;
+
+            // 현재 회차의 추첨일(토요일) 계산
+            const drawDate = new Date(baseDate);
+            drawDate.setDate(baseDate.getDate() + weeksDiff * 7);
+
+            const year = drawDate.getFullYear();
+            const month = String(drawDate.getMonth() + 1).padStart(2, '0');
+            const day = String(drawDate.getDate()).padStart(2, '0');
+
+            document.getElementById('roundInfo').textContent = `${year}년 ${month}월 ${day}일 제 ${currentRound}회`;
+        }
 
         function getRandomNumbers() {
-            const numbers = [];
-            while (numbers.length < 6) {
+            const numbers = new Set();
+            while (numbers.size < 6) {
                 const num = Math.floor(Math.random() * 45) + 1;
-                if (!numbers.includes(num)) {
-                    numbers.push(num);
-                }
+                numbers.add(num);
             }
-            return numbers.sort((a, b) => a - b);
+            return Array.from(numbers).sort((a, b) => a - b);
         }
 
         function getBallClass(number) {
@@ -498,15 +598,11 @@
         function generateLotto(count) {
             const resultsDiv = document.getElementById('results');
             
-            // 첫 생성시 빈 상태 메시지 제거
             if (resultsDiv.innerHTML.includes('empty-state')) {
                 resultsDiv.innerHTML = '';
             }
 
-            // 명언 업데이트
             updateQuote();
-            
-            // 스파클 효과
             createSparkles();
 
             for (let i = 0; i < count; i++) {
@@ -540,12 +636,10 @@
             `;
             combinationCount = 0;
             
-            // 명언도 초기화
             quoteIndex = 0;
             updateQuote();
         }
 
-        // 주기적으로 명언 변경 (10초마다)
         setInterval(updateQuote, 10000);
     </script>
 </body>
