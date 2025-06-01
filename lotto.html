@@ -395,12 +395,11 @@
         let quoteIndex = 0;
         
         document.addEventListener('DOMContentLoaded', () => {
-            // localStorage에서 저장된 생성 횟수 불러오기
             totalGeneratedCount = parseInt(localStorage.getItem('lottoGenCount'), 10) || 0;
 
             updateRoundInfo();
             updateQuote(); 
-            checkAndToggleButtons(); // 페이지 로드 시 바로 버튼 상태 확인
+            checkAndToggleButtons();
 
             document.querySelectorAll('input[name="generationMode"]').forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -555,7 +554,7 @@
                     
                     combinationCount++;
                     totalGeneratedCount++;
-                    localStorage.setItem('lottoGenCount', totalGeneratedCount); // localStorage에 횟수 저장
+                    localStorage.setItem('lottoGenCount', totalGeneratedCount);
 
                     setDiv.innerHTML = `
                         <div class="set-label">조합 ${combinationCount}</div>
@@ -575,23 +574,29 @@
         function resetGenerationLimit() {
             alert('조합 생성 제한이 초기화되었습니다. 다시 10개까지 생성할 수 있습니다.');
             totalGeneratedCount = 0;
-            localStorage.setItem('lottoGenCount', 0); // localStorage 횟수 초기화
+            localStorage.setItem('lottoGenCount', 0);
             if (confirm('기존에 생성된 번호 목록도 모두 지우시겠습니까?')) {
-                clearResults();
+                clearResults(true); // true를 전달하여 초기화만 하도록 함
             } else {
                 checkAndToggleButtons();
             }
         }
 
-        function clearResults() {
+        // '결과 지우기' 함수 수정
+        function clearResults(isFromReset = false) {
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = `<div class="empty-state">버튼을 눌러 행운의 번호를 생성해보세요</div>`;
             combinationCount = 0;
-            totalGeneratedCount = 0; 
-            localStorage.setItem('lottoGenCount', 0); // localStorage 횟수 초기화
             quoteIndex = 0;
             updateQuote();
-            checkAndToggleButtons();
+            
+            // '블로그 보러 가기'를 통한 호출이 아닐 경우, 생성 제한을 초기화하지 않음
+            if (!isFromReset) {
+                // 이 버튼은 생성 횟수(totalGeneratedCount)와 localStorage를 건드리지 않습니다.
+                // 따라서 버튼 활성화/비활성화 상태도 그대로 유지됩니다.
+            } else {
+                checkAndToggleButtons(); // 리셋을 통한 호출일 때만 버튼 상태 갱신
+            }
         }
 
         setInterval(updateQuote, 10000);
