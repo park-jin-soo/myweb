@@ -62,7 +62,7 @@
         .round-number {
             color: #ff0080;
             text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080;
-            font-size: 1.4rem; /* 크기 확대 */
+            font-size: 1.4rem; 
         }
 
         @keyframes glow {
@@ -72,7 +72,7 @@
 
         .main-title {
             font-family: 'Orbitron', monospace;
-            font-size: 2.6rem; /* 크기 축소 */
+            font-size: 2.6rem; 
             font-weight: 900;
             background: linear-gradient(45deg, #ff006e, #fb5607, #ffbe0b, #8338ec, #3a86ff);
             background-size: 400% 400%;
@@ -174,13 +174,13 @@
         .button-group {
             display: flex;
             justify-content: center;
-            gap: 15px; /* 버튼 간격 조정 */
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         .neon-btn {
-            position: relative; padding: 15px 25px; /* 패딩 조정 */
-            font-size: 1.0rem; /* 폰트 크기 조정 */
+            position: relative; padding: 15px 25px; 
+            font-size: 1.0rem; 
             font-weight: 700; background: transparent; border: 2px solid;
             border-radius: 50px; cursor: pointer; overflow: hidden;
             transition: all 0.3s ease; font-family: 'Orbitron', monospace;
@@ -395,8 +395,12 @@
         let quoteIndex = 0;
         
         document.addEventListener('DOMContentLoaded', () => {
+            // localStorage에서 저장된 생성 횟수 불러오기
+            totalGeneratedCount = parseInt(localStorage.getItem('lottoGenCount'), 10) || 0;
+
             updateRoundInfo();
             updateQuote(); 
+            checkAndToggleButtons(); // 페이지 로드 시 바로 버튼 상태 확인
 
             document.querySelectorAll('input[name="generationMode"]').forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -551,6 +555,7 @@
                     
                     combinationCount++;
                     totalGeneratedCount++;
+                    localStorage.setItem('lottoGenCount', totalGeneratedCount); // localStorage에 횟수 저장
 
                     setDiv.innerHTML = `
                         <div class="set-label">조합 ${combinationCount}</div>
@@ -570,6 +575,7 @@
         function resetGenerationLimit() {
             alert('조합 생성 제한이 초기화되었습니다. 다시 10개까지 생성할 수 있습니다.');
             totalGeneratedCount = 0;
+            localStorage.setItem('lottoGenCount', 0); // localStorage 횟수 초기화
             if (confirm('기존에 생성된 번호 목록도 모두 지우시겠습니까?')) {
                 clearResults();
             } else {
@@ -582,6 +588,7 @@
             resultsDiv.innerHTML = `<div class="empty-state">버튼을 눌러 행운의 번호를 생성해보세요</div>`;
             combinationCount = 0;
             totalGeneratedCount = 0; 
+            localStorage.setItem('lottoGenCount', 0); // localStorage 횟수 초기화
             quoteIndex = 0;
             updateQuote();
             checkAndToggleButtons();
