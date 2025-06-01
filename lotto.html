@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 자동 조합 생성기</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 255, 198, 0.3) 0%, transparent 50%);
+            animation: backgroundShift 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% {
+                background-position: 0% 0%, 100% 100%, 50% 50%;
+            }
+            100% {
+                background-position: 100% 100%, 0% 0%, 75% 25%;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .round-info {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+            }
+            to {
+                text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+            }
+        }
+
+        .main-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff006e, #fb5607, #ffbe0b, #8338ec, #3a86ff);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .fortune-quote {
+            font-size: 1rem;
+            color: #ffd700;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInOut 4s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .control-panel {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .neon-btn {
+            position: relative;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: transparent;
+            border: 2px solid;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .neon-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .neon-btn:hover:before {
+            left: 100%;
+        }
+
+        .btn-5 {
+            color: #00ffff;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .btn-5:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-10 {
+            color: #ff0080;
+            border-color: #ff0080;
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
+        }
+
+        .btn-10:hover {
+            background: rgba(255, 0, 128, 0.1);
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.6), inset 0 0 30px rgba(255, 0, 128, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-clear {
+            color: #ff4500;
+            border-color: #ff4500;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+        }
+
+        .btn-clear:hover {
+            background: rgba(255, 69, 0, 0.1);
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.6), inset 0 0 30px rgba(255, 69, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .neon-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .results-section {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            min-height: 400px;
+        }
+
+        .results-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .combination-set {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .combination-set:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .set-label {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .balls-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .neon-ball {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.3rem;
+            font-family: 'Orbitron', monospace;
+            position: relative;
+            border: 2px solid;
+            animation: ballGlow 2s ease-in-out infinite alternate;
+            transition: transform 0.3s ease;
+        }
+
+        .neon-ball:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        @keyframes ballGlow {
+            from {
+                box-shadow: 0 0 10px currentColor, inset 0 0 10px rgba(255, 255, 255, 0.1);
+            }
+            to {
+                box-shadow: 0 0 20px currentColor, 0 0 30px currentColor, inset 0 0 20px rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .ball-1-10 {
+            color: #ffd700;
+            border-color: #ffd700;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+        }
+
+        .ball-11-20 {
+            color: #00bfff;
+            border-color: #00bfff;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 191, 255, 0.3), rgba(0, 191, 255, 0.1));
+        }
+
+        .ball-21-30 {
+            color: #ff1493;
+            border-color: #ff1493;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 20, 147, 0.3), rgba(255, 20, 147, 0.1));
+        }
+
+        .ball-31-40 {
+            color: #9370db;
+            border-color: #9370db;
+            background: radial-gradient(circle at 30% 30%, rgba(147, 112, 219, 0.3), rgba(147, 112, 219, 0.1));
+        }
+
+        .ball-41-45 {
+            color: #00ff7f;
+            border-color: #00ff7f;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 127, 0.3), rgba(0, 255, 127, 0.1));
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-top: 80px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle 1.5s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .neon-btn {
+                width: 250px;
+            }
+            
+            .neon-ball {
+                width: 50px;
+                height: 50px;
+                font-size: 1.1rem;
+            }
+            
+            .balls-row {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="round-info" id="roundInfo">제 1175회 로또</div>
+            <h1 class="main-title">✨ 자동 조합 생성기 ✨</h1>
+            <p class="subtitle">당신의 인생을 바꿀 번호가 여기에</p>
+            <div class="fortune-quote" id="fortuneQuote">🍀 행운은 준비된 자에게 찾아온다 🍀</div>
+        </div>
+
+        <div class="control-panel">
+            <div class="button-group">
+                <button class="neon-btn btn-5" onclick="generateLotto(5)" id="btn5">
+                    ⚡ 5개 조합 생성 ⚡
+                </button>
+                <button class="neon-btn btn-10" onclick="generateLotto(10)" id="btn10">
+                    💫 10개 조합 생성 💫
+                </button>
+                <button class="neon-btn btn-clear" onclick="clearResults()">
+                    🗑️ 결과 지우기 🗑️
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2 class="results-title">🎰 생성된 조합 🎰</h2>
+            <div id="results">
+                <div class="empty-state">
+                    ✨ 버튼을 눌러 행운의 번호를 생성해보세요 ✨
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fortuneQuotes = [
+            "🍀 행운은 준비된 자에게 찾아온다 🍀",
+            "⭐ 꿈을 믿는 자만이 꿈을 이룬다 ⭐",
+            "🌟 오늘이 당신의 운명을 바꿀 날이다 🌟",
+            "💎 기회는 항상 준비된 마음에 온다 💎",
+            "🎯 성공은 우연이 아닌 필연이다 🎯",
+            "🚀 당신의 미래는 지금 시작된다 🚀",
+            "🌈 희망을 품고 도전하는 자가 승리한다 🌈",
+            "💫 믿음이 있는 곳에 기적이 일어난다 💫",
+            "🎪 인생은 한 번뿐, 과감히 도전하라 🎪",
+            "🔥 열정이 있는 자에게 불가능은 없다 🔥"
+        ];
+
+        let combinationCount = 0;
+        let quoteIndex = 0;
+
+        // 회차 계산 (2024년 5월 31일이 1174회, 매주 토요일)
+        function getCurrentRound() {
+            const baseDate = new Date('2024-05-31'); // 1174회 날짜
+            const baseRound = 1174;
+            const today = new Date();
+            
+            // 다음 토요일 계산
+            const daysUntilSaturday = (6 - today.getDay()) % 7;
+            const nextSaturday = new Date(today);
+            nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+            
+            // 기준 날짜로부터 몇 주 지났는지 계산
+            const timeDiff = nextSaturday.getTime() - baseDate.getTime();
+            const weeksDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
+            
+            return baseRound + weeksDiff;
+        }
+
+        // 페이지 로드시 회차 업데이트
+        document.getElementById('roundInfo').textContent = `제 ${getCurrentRound()}회 로또`;
+
+        function getRandomNumbers() {
+            const numbers = [];
+            while (numbers.length < 6) {
+                const num = Math.floor(Math.random() * 45) + 1;
+                if (!numbers.includes(num)) {
+                    numbers.push(num);
+                }
+            }
+            return numbers.sort((a, b) => a - b);
+        }
+
+        function getBallClass(number) {
+            if (number <= 10) return 'ball-1-10';
+            if (number <= 20) return 'ball-11-20';
+            if (number <= 30) return 'ball-21-30';
+            if (number <= 40) return 'ball-31-40';
+            return 'ball-41-45';
+        }
+
+        function createSparkles() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 1500);
+                }, i * 100);
+            }
+        }
+
+        function updateQuote() {
+            const quoteElement = document.getElementById('fortuneQuote');
+            quoteElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                quoteElement.textContent = fortuneQuotes[quoteIndex];
+                quoteElement.style.opacity = '1';
+                quoteIndex = (quoteIndex + 1) % fortuneQuotes.length;
+            }, 300);
+        }
+
+        function generateLotto(count) {
+            const resultsDiv = document.getElementById('results');
+            
+            // 첫 생성시 빈 상태 메시지 제거
+            if (resultsDiv.innerHTML.includes('empty-state')) {
+                resultsDiv.innerHTML = '';
+            }
+
+            // 명언 업데이트
+            updateQuote();
+            
+            // 스파클 효과
+            createSparkles();
+
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const numbers = getRandomNumbers();
+                    const setDiv = document.createElement('div');
+                    setDiv.className = 'combination-set';
+                    
+                    const ballsHtml = numbers.map(num => 
+                        `<div class="neon-ball ${getBallClass(num)}">${num}</div>`
+                    ).join('');
+                    
+                    setDiv.innerHTML = `
+                        <div class="set-label">✨ 조합 ${combinationCount + i + 1} ✨</div>
+                        <div class="balls-row">${ballsHtml}</div>
+                    `;
+                    
+                    resultsDiv.appendChild(setDiv);
+                }, i * 200);
+            }
+
+            combinationCount += count;
+        }
+
+        function clearResults() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="empty-state">
+                    ✨ 버튼을 눌러 행운의 번호를 생성해보세요 ✨
+                </div>
+            `;
+            combinationCount = 0;
+            
+            // 명언도 초기화
+            quoteIndex = 0;
+            updateQuote();
+        }
+
+        // 주기적으로 명언 변경 (10초마다)
+        setInterval(updateQuote, 10000);
+    </script>
+</body>
+</html>
