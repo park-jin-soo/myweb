@@ -1,96 +1,96 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>채움 스댓공 고객조회기</title>
-  <style>
-    body { 
-      font-family: 'Noto Sans KR', sans-serif; 
-      max-width: 900px; 
-      margin: auto; 
-      padding: 20px; 
-      background: #f4f6f8; 
-    }
-    h1 { text-align: center; color: #2b4e84; }
-    .box, .admin-box { 
-      background: #fff; 
-      padding: 20px; 
-      margin-top: 20px; 
-      border-radius: 10px; 
-      box-shadow: 0 0 8px rgba(0,0,0,0.05); 
-    }
-    input, button { 
-      padding: 10px; 
-      margin: 5px 0; 
-      width: 100%; 
-      box-sizing: border-box; 
-    }
-    button { 
-      background-color: #2b4e84; 
-      color: white; 
-      font-weight: bold; 
-      border: none; 
-      cursor: pointer; 
-    }
-    .result { margin-top: 15px; font-size: 16px; }
-    .red { color: red; }
-    .blue { color: blue; }
-    .green { color: green; }
-    .admin-only { display: none; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .row > div { flex: 1; min-width: 150px; }
-    table { width: 100%; margin-top: 10px; border-collapse: collapse; }
-    th, td { padding: 8px; border: 1px solid #ccc; text-align: center; }
-    .footer { text-align: center; margin-top: 30px; font-size: 18px; font-weight: bold; }
-    .alert-section { 
-      background: #fff3cd; 
-      border: 2px solid #ffc107; 
-      border-radius: 8px; 
-      padding: 15px; 
-      margin-bottom: 20px; 
-    }
-    .alert-buttons { display: flex; gap: 10px; margin: 10px 0; }
-    .alert-buttons button { flex: 1; background-color: #dc3545; }
-    .alert-buttons button:hover { background-color: #c82333; }
-    .alert-result { 
-      margin-top: 15px; 
-      padding: 10px; 
-      background: white; 
-      border-radius: 5px; 
-      border: 1px solid #ddd;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .urgent { background-color: #f8d7da; color: #721c24; padding: 5px; border-radius: 3px; }
-    .warning { background-color: #fff3cd; color: #856404; padding: 5px; border-radius: 3px; }
-    .copy-btn { 
-      background: #28a745; 
-      color: white; 
-      border: none; 
-      padding: 5px 10px; 
-      border-radius: 3px; 
-      cursor: pointer; 
-      font-size: 12px;
-      margin-left: 10px;
-    }
-    .copy-btn:hover { background: #218838; }
-    .message-box { 
-      background: #f8f9fa; 
-      border: 1px solid #dee2e6; 
-      padding: 10px; 
-      margin: 10px 0; 
-      border-radius: 5px; 
-      font-family: monospace;
-      white-space: pre-wrap;
-    }
-    .backup-section { margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee; }
-    .backup-buttons { display: flex; gap: 10px; margin-top: 10px; }
-    .backup-buttons button { flex: 1; }
-    .status-msg { margin-top: 10px; padding: 10px; border-radius: 5px; }
-    .success { background-color: #d4edda; color: #155724; }
-    .warning { background-color: #fff3cd; color: #856404; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>채움 스댓공 고객조회기</title>
+  <style>
+    body { 
+      font-family: 'Noto Sans KR', sans-serif; 
+      max-width: 900px; 
+      margin: auto; 
+      padding: 20px; 
+      background: #f4f6f8; 
+    }
+    h1 { text-align: center; color: #2b4e84; }
+    .box, .admin-box { 
+      background: #fff; 
+      padding: 20px; 
+      margin-top: 20px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 8px rgba(0,0,0,0.05); 
+    }
+    input, button { 
+      padding: 10px; 
+      margin: 5px 0; 
+      width: 100%; 
+      box-sizing: border-box; 
+    }
+    button { 
+      background-color: #2b4e84; 
+      color: white; 
+      font-weight: bold; 
+      border: none; 
+      cursor: pointer; 
+    }
+    .result { margin-top: 15px; font-size: 16px; }
+    .red { color: red; }
+    .blue { color: blue; }
+    .green { color: green; }
+    .admin-only { display: none; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .row > div { flex: 1; min-width: 150px; }
+    table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ccc; text-align: center; }
+    .footer { text-align: center; margin-top: 30px; font-size: 18px; font-weight: bold; }
+    .alert-section { 
+      background: #fff3cd; 
+      border: 2px solid #ffc107; 
+      border-radius: 8px; 
+      padding: 15px; 
+      margin-bottom: 20px; 
+    }
+    .alert-buttons { display: flex; gap: 10px; margin: 10px 0; }
+    .alert-buttons button { flex: 1; background-color: #dc3545; }
+    .alert-buttons button:hover { background-color: #c82333; }
+    .alert-result { 
+      margin-top: 15px; 
+      padding: 10px; 
+      background: white; 
+      border-radius: 5px; 
+      border: 1px solid #ddd;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .urgent { background-color: #f8d7da; color: #721c24; padding: 5px; border-radius: 3px; }
+    .warning { background-color: #fff3cd; color: #856404; padding: 5px; border-radius: 3px; }
+    .copy-btn { 
+      background: #28a745; 
+      color: white; 
+      border: none; 
+      padding: 5px 10px; 
+      border-radius: 3px; 
+      cursor: pointer; 
+      font-size: 12px;
+      margin-left: 10px;
+    }
+    .copy-btn:hover { background: #218838; }
+    .message-box { 
+      background: #f8f9fa; 
+      border: 1px solid #dee2e6; 
+      padding: 10px; 
+      margin: 10px 0; 
+      border-radius: 5px; 
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .backup-section { margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee; }
+    .backup-buttons { display: flex; gap: 10px; margin-top: 10px; }
+    .backup-buttons button { flex: 1; }
+    .status-msg { margin-top: 10px; padding: 10px; border-radius: 5px; }
+    .success { background-color: #d4edda; color: #155724; }
+    .warning { background-color: #fff3cd; color: #856404; }
+  </style>
 </head>
 <body>
 <h1>채움 스댓공 고객 종료일 조회</h1>
@@ -98,434 +98,517 @@
 <div class="footer">💳 토스뱅크 1001 - 3085 - 3057 박진수 (20,000원)</div>
 
 <div class="box">
-  <h3>👤 고객 전용 조회</h3>
-  <input type="text" id="userSearch" placeholder="아이디 입력">
-  <button onclick="searchUser()">조회하기</button>
-  <div id="searchResult" class="result"></div>
+  <h3>👤 고객 전용 조회</h3>
+  <input type="text" id="userSearch" placeholder="아이디 입력">
+  <button onclick="searchUser()">조회하기</button>
+  <div id="searchResult" class="result"></div>
 </div>
 
 <div class="box">
-  <h3>🔐 관리자 로그인</h3>
-  <input type="password" id="adminPass" placeholder="관리자 비밀번호 입력">
-  <button onclick="loginAdmin()">로그인</button>
+  <h3>🔐 관리자 로그인</h3>
+  <input type="password" id="adminPass" placeholder="관리자 비밀번호 입력">
+  <button onclick="loginAdmin()">로그인</button>
 </div>
 
 <div id="adminPanel" class="admin-only admin-box">
-  <h3>📋 관리자 전용</h3>
-  
-  <!-- 종료 임박 알림 섹션 -->
-  <div class="alert-section">
-    <h4>🚨 종료 임박 알림</h4>
-    <div class="alert-buttons">
-      <button onclick="checkExpiringUsers()">📅 오늘 확인</button>
-      <button onclick="generateKakaoMessages()">💬 카톡 메시지 생성</button>
-    </div>
-    <div id="alertResult" class="alert-result"></div>
-  </div>
-  
-  <div class="row">
-    <div><input type="text" id="newId" placeholder="아이디 입력"></div>
-    <div><input type="date" id="startDate"></div>
-    <div><input type="date" id="endDate"></div>
-  </div>
-  <button onclick="addUser()">➕ 아이디 추가/수정</button>
-  <button onclick="saveToTxt()">💾 TXT로 저장</button>
-  <div id="memberCount" class="result"></div>
-  <div id="statusMessage"></div>
-  
-  <div class="backup-section">
-    <h4>🔄 데이터 백업/복원</h4>
-    <div class="backup-buttons">
-      <button onclick="backupData()">📤 데이터 백업</button>
-      <button onclick="document.getElementById('fileInput').click()">📥 데이터 복원</button>
-      <button onclick="resetToDefault()">🔄 초기 데이터로 복원</button>
-    </div>
-    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="restoreData(this)">
-    <div class="status-msg" style="font-size: 12px; color: #666;">
-      💡 팁: 정기적으로 데이터를 백업하세요. 브라우저 데이터가 삭제될 수 있습니다.
-    </div>
-  </div>
-  
-  <table id="userTable">
-    <thead><tr><th>아이디</th><th>시작일</th><th>종료일</th><th>상태</th><th>수정/삭제</th></tr></thead>
-    <tbody></tbody>
-  </table>
+  <h3>📋 관리자 전용</h3>
+  
+    <div class="alert-section">
+    <h4>🚨 종료 임박 알림</h4>
+    <div class="alert-buttons">
+      <button onclick="checkExpiringUsers()">📅 오늘 확인</button>
+      <button onclick="generateKakaoMessages()">💬 카톡 메시지 생성</button>
+    </div>
+    <div id="alertResult" class="alert-result"></div>
+  </div>
+  
+  <div class="row">
+    <div><input type="text" id="newId" placeholder="아이디 입력"></div>
+    <div><input type="date" id="startDate"></div>
+    <div><input type="date" id="endDate"></div>
+  </div>
+  <button onclick="addUser()">➕ 아이디 추가/수정</button>
+  <button onclick="saveToTxt()">💾 TXT로 저장</button>
+  <div id="memberCount" class="result"></div>
+  <div id="statusMessage"></div>
+  
+  <div class="backup-section">
+    <h4>🔄 데이터 백업/복원</h4>
+    <div class="backup-buttons">
+      <button onclick="backupData()">📤 데이터 백업</button>
+      <button onclick="document.getElementById('fileInput').click()">📥 데이터 복원</button>
+      <button onclick="resetToDefault()">🔄 초기 데이터로 복원</button>
+    </div>
+    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="restoreData(this)">
+    <div class="status-msg" style="font-size: 12px; color: #666;">
+      💡 팁: 정기적으로 데이터를 백업하세요. 브라우저 데이터가 삭제될 수 있습니다.
+    </div>
+  </div>
+  
+  <table id="userTable">
+    <thead><tr><th>아이디</th><th>시작일</th><th>종료일</th><th>상태</th><th>수정/삭제</th></tr></thead>
+    <tbody></tbody>
+  </table>
 </div>
 
 <script>
 // 전역 변수
 const ADMIN_PASSWORD = "7702";
 let users = {
-  "aa--dd": {"start": "2025-05-15", "end": "2025-06-15"},
-  "epic_study": {"start": "2025-05-31", "end": "2025-06-30"},
-  "hellenjj": {"start": "2025-06-08", "end": "2025-07-08"},
-  "hge319": {"start": "2025-06-01", "end": "2025-07-01"},
-  "kim1160gagle": {"start": "2025-05-23", "end": "2025-06-23"},
-  "mark1536": {"start": "2025-06-01", "end": "2025-07-01"},
-  "meena1225": {"start": "2025-05-01", "end": "2025-06-01"},
-  "meena77": {"start": "2025-05-01", "end": "2025-06-01"},
-  "na_english": {"start": "2025-05-27", "end": "2025-06-27"},
-  "s016653": {"start": "2025-05-08", "end": "2025-06-08"},
-  "somsatag1225": {"start": "2025-06-01", "end": "2025-07-01"},
-  "thebrightedu": {"start": "2025-05-01", "end": "2025-06-01"},
-  "ussua": {"start": "2025-05-20", "end": "2025-06-20"},
-  "uyeong17": {"start": "2025-05-08", "end": "2025-06-08"},
-  "whiteyun8058": {"start": "2025-05-15", "end": "2025-06-15"},
-  "whiteyun901": {"start": "2025-05-15", "end": "2025-06-15"},
-  "yglajiasr632": {"start": "2025-05-08", "end": "2025-06-08"},
-  "ymmath00": {"start": "2025-05-28", "end": "2025-06-28"}
+  "aa--dd": {
+    "start": "2025-05-15",
+    "end": "2025-06-15"
+  },
+  "epic_study": {
+    "start": "2025-05-31",
+    "end": "2025-06-30"
+  },
+  "hellenjj": {
+    "start": "2025-06-08",
+    "end": "2025-07-08"
+  },
+  "hge319": {
+    "start": "2025-06-01",
+    "end": "2025-07-01"
+  },
+  "kim1160gagle": {
+    "start": "2025-05-23",
+    "end": "2025-06-23"
+  },
+  "mark1536": {
+    "start": "2025-06-01",
+    "end": "2025-07-01"
+  },
+  "meena1225": {
+    "start": "2025-06-01",
+    "end": "2025-07-01"
+  },
+  "meena77": {
+    "start": "2025-06-01",
+    "end": "2025-07-01"
+  },
+  "na_english": {
+    "start": "2025-05-27",
+    "end": "2025-06-27"
+  },
+  "somsatag1225": {
+    "start": "2025-06-01",
+    "end": "2025-07-01"
+  },
+  "thebrightedu": {
+    "start": "2025-06-08",
+    "end": "2025-07-08"
+  },
+  "ussua": {
+    "start": "2025-05-20",
+    "end": "2025-06-20"
+  },
+  "whiteyun8058": {
+    "start": "2025-05-18",
+    "end": "2025-06-18"
+  },
+  "whiteyun901": {
+    "start": "2025-05-18",
+    "end": "2025-06-18"
+  },
+  "ymmath00": {
+    "start": "2025-05-28",
+    "end": "2025-06-28"
+  }
 };
 
 // 유틸리티 함수들
 function getDateStatus(endDate) {
-  const today = new Date();
-  const end = new Date(endDate);
-  const diff = Math.ceil((end - today) / (1000*60*60*24));
-  
-  if (diff > 7) return { text: '진행중', class: 'green' };
-  if (diff > 0) return { text: diff + '일 남음', class: 'red' };
-  return { text: '종료됨', class: 'red' };
+  const today = new Date();
+  const end = new Date(endDate);
+  const diff = Math.ceil((end - today) / (1000*60*60*24));
+  
+  if (diff > 7) return { text: '진행중', class: 'green' };
+  if (diff > 0) return { text: diff + '일 남음', class: 'red' };
+  return { text: '종료됨', class: 'red' };
 }
 
 function showMessage(elementId, message, className) {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.innerHTML = '<span class="' + className + '">' + message + '</span>';
-  }
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.innerHTML = '<span class="' + className + '">' + message + '</span>';
+  }
 }
 
 // 사용자 조회 함수
 function searchUser() {
-  const id = document.getElementById("userSearch").value.trim();
-  const box = document.getElementById("searchResult");
-  
-  if (!id) {
-    box.innerHTML = '<span class="red">아이디를 입력해주세요.</span>';
-    return;
-  }
-  
-  const user = users[id];
-  if (!user) {
-    box.innerHTML = '<span class="red">등록되지 않은 아이디입니다.</span>';
-    return;
-  }
-  
-  const today = new Date();
-  const end = new Date(user.end);
-  const diff = Math.ceil((end - today) / (1000*60*60*24));
-  const status = getDateStatus(user.end);
-  
-  let msg = '✅ <b class="blue">아이디:</b> ' + id + '<br>';
-  msg += '📅 <b>시작일:</b> ' + user.start + '<br>';
-  msg += '📅 <b>종료일:</b> ' + user.end + '<br>';
-  msg += '📊 <b>상태:</b> <span class="' + status.class + '">' + status.text + '</span><br>';
-  
-  if (diff > 0) {
-    msg += '<span class="red">⏳ 종료일까지 ' + diff + '일 남았습니다.</span>';
-  } else {
-    msg += '<span class="red">🔒 종료되었습니다. 입금 후 카톡 맨션 주세요.</span>';
-  }
-  
-  box.innerHTML = msg;
+  const id = document.getElementById("userSearch").value.trim();
+  const box = document.getElementById("searchResult");
+  
+  if (!id) {
+    box.innerHTML = '<span class="red">아이디를 입력해주세요.</span>';
+    return;
+  }
+  
+  const user = users[id];
+  if (!user) {
+    box.innerHTML = '<span class="red">등록되지 않은 아이디입니다.</span>';
+    return;
+  }
+  
+  const today = new Date();
+  const end = new Date(user.end);
+  const diff = Math.ceil((end - today) / (1000*60*60*24));
+  const status = getDateStatus(user.end);
+  
+  let msg = '✅ <b class="blue">아이디:</b> ' + id + '<br>';
+  msg += '📅 <b>시작일:</b> ' + user.start + '<br>';
+  msg += '📅 <b>종료일:</b> ' + user.end + '<br>';
+  msg += '📊 <b>상태:</b> <span class="' + status.class + '">' + status.text + '</span><br>';
+  
+  if (diff > 0) {
+    msg += '<span class="red">⏳ 종료일까지 ' + diff + '일 남았습니다.</span>';
+  } else {
+    msg += '<span class="red">🔒 종료되었습니다. 입금 후 카톡 맨션 주세요.</span>';
+  }
+  
+  box.innerHTML = msg;
 }
 
 // 관리자 로그인
 function loginAdmin() {
-  const pw = document.getElementById("adminPass").value.trim();
-  if (pw === ADMIN_PASSWORD) {
-    document.getElementById("adminPanel").style.display = "block";
-    loadTable();
-    alert("관리자 로그인 성공!");
-  } else {
-    alert("비밀번호가 틀렸습니다.");
-  }
+  const pw = document.getElementById("adminPass").value.trim();
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById("adminPanel").style.display = "block";
+    loadTable();
+    alert("관리자 로그인 성공!");
+  } else {
+    alert("비밀번호가 틀렸습니다.");
+  }
 }
 
 // 테이블 로드
 function loadTable() {
-  const body = document.querySelector("#userTable tbody");
-  body.innerHTML = "";
-  const keys = Object.keys(users).sort();
-  document.getElementById("memberCount").innerText = "총 회원 수 : " + keys.length + " 명";
-  
-  keys.forEach(function(id) {
-    const status = getDateStatus(users[id].end);
-    const row = '<tr>' +
-      '<td>' + id + '</td>' +
-      '<td>' + users[id].start + '</td>' +
-      '<td>' + users[id].end + '</td>' +
-      '<td><span class="' + status.class + '">' + status.text + '</span></td>' +
-      '<td>' +
-        '<button onclick="editUser(\'' + id + '\')">수정</button>' +
-        '<button onclick="deleteUser(\'' + id + '\')">삭제</button>' +
-      '</td>' +
-    '</tr>';
-    body.innerHTML += row;
-  });
+  const body = document.querySelector("#userTable tbody");
+  body.innerHTML = "";
+  const keys = Object.keys(users).sort();
+  document.getElementById("memberCount").innerText = "총 회원 수 : " + keys.length + " 명";
+  
+  keys.forEach(function(id) {
+    const status = getDateStatus(users[id].end);
+    const row = '<tr>' +
+      '<td>' + id + '</td>' +
+      '<td>' + users[id].start + '</td>' +
+      '<td>' + users[id].end + '</td>' +
+      '<td><span class="' + status.class + '">' + status.text + '</span></td>' +
+      '<td>' +
+        '<button onclick="editUser(\'' + id + '\')">수정</button>' +
+        '<button onclick="deleteUser(\'' + id + '\')">삭제</button>' +
+      '</td>' +
+    '</tr>';
+    body.innerHTML += row;
+  });
 }
 
 // 사용자 추가/수정
 function addUser() {
-  const id = document.getElementById("newId").value.trim();
-  const start = document.getElementById("startDate").value;
-  const end = document.getElementById("endDate").value;
-  
-  if (!id || !start || !end) {
-    alert("모든 항목을 입력하세요.");
-    return;
-  }
-  
-  const isEdit = users[id] ? true : false;
-  users[id] = { start: start, end: end };
-  
-  loadTable();
-  // 입력 필드 초기화
-  document.getElementById("newId").value = "";
-  document.getElementById("startDate").value = "";
-  document.getElementById("endDate").value = "";
-  
-  const message = isEdit ? (id + " 정보가 수정되었습니다.") : (id + "가 추가되었습니다.");
-  alert(message);
+  const id = document.getElementById("newId").value.trim();
+  const start = document.getElementById("startDate").value;
+  const end = document.getElementById("endDate").value;
+  
+  if (!id || !start || !end) {
+    alert("모든 항목을 입력하세요.");
+    return;
+  }
+  
+  const isEdit = users[id] ? true : false;
+  users[id] = { start: start, end: end };
+  
+  loadTable();
+  // 입력 필드 초기화
+  document.getElementById("newId").value = "";
+  document.getElementById("startDate").value = "";
+  document.getElementById("endDate").value = "";
+  
+  const message = isEdit ? (id + " 정보가 수정되었습니다.") : (id + "가 추가되었습니다.");
+  alert(message);
 }
 
 // 사용자 수정
 function editUser(id) {
-  document.getElementById("newId").value = id;
-  document.getElementById("startDate").value = users[id].start;
-  document.getElementById("endDate").value = users[id].end;
-  
-  // 화면 상단으로 스크롤
-  document.getElementById("newId").scrollIntoView({ behavior: 'smooth' });
-  document.getElementById("newId").focus();
+  document.getElementById("newId").value = id;
+  document.getElementById("startDate").value = users[id].start;
+  document.getElementById("endDate").value = users[id].end;
+  
+  // 화면 상단으로 스크롤
+  document.getElementById("newId").scrollIntoView({ behavior: 'smooth' });
+  document.getElementById("newId").focus();
 }
 
 // 사용자 삭제
 function deleteUser(id) {
-  if (confirm(id + "을(를) 삭제할까요?")) {
-    delete users[id];
-    loadTable();
-    alert(id + "가 삭제되었습니다.");
-  }
+  if (confirm(id + "을(를) 삭제할까요?")) {
+    delete users[id];
+    loadTable();
+    alert(id + "가 삭제되었습니다.");
+  }
 }
 
 // 종료 임박 확인
 function checkExpiringUsers() {
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  
-  const expiresToday = [];
-  const expiresTomorrow = [];
-  const expired = [];
-  const expiringSoon = [];
-  
-  Object.keys(users).forEach(function(id) {
-    const endDate = new Date(users[id].end);
-    const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
-    
-    if (diffDays === 0) {
-      expiresToday.push({id: id, endDate: users[id].end, diffDays: diffDays});
-    } else if (diffDays === 1) {
-      expiresTomorrow.push({id: id, endDate: users[id].end, diffDays: diffDays});
-    } else if (diffDays < 0) {
-      expired.push({id: id, endDate: users[id].end, diffDays: Math.abs(diffDays)});
-    } else if (diffDays >= 2 && diffDays <= 7) {
-      expiringSoon.push({id: id, endDate: users[id].end, diffDays: diffDays});
-    }
-  });
-  
-  let html = '<h5>📅 ' + today.toLocaleDateString('ko-KR') + ' 알림 현황</h5>';
-  
-  if (expiresToday.length > 0) {
-    html += '<div class="urgent"><strong>🔴 오늘 종료 (' + expiresToday.length + '명)</strong><br>';
-    expiresToday.forEach(function(user) {
-      html += '@' + user.id + ' ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expiresTomorrow.length > 0) {
-    html += '<div class="urgent"><strong>⚠️ 내일 종료 (' + expiresTomorrow.length + '명)</strong><br>';
-    expiresTomorrow.forEach(function(user) {
-      html += '@' + user.id + ' ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expiringSoon.length > 0) {
-    html += '<div class="warning"><strong>📢 곧 종료 예정 (2-7일, ' + expiringSoon.length + '명)</strong><br>';
-    expiringSoon.forEach(function(user) {
-      html += '@' + user.id + '(' + user.diffDays + '일) ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expired.length > 0) {
-    html += '<div class="urgent"><strong>❌ 이미 종료됨 (' + expired.length + '명)</strong><br>';
-    expired.forEach(function(user) {
-      html += '@' + user.id + '(' + user.diffDays + '일전) ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expiringSoon.length === 0 && expired.length === 0) {
-    html += '<div class="green">✅ 오늘 알림할 회원이 없습니다!</div>';
-  }
-  
-  document.getElementById('alertResult').innerHTML = html;
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  const expiresToday = [];
+  const expiresTomorrow = [];
+  const expired = [];
+  const expiringSoon = [];
+  
+  Object.keys(users).forEach(function(id) {
+    const endDate = new Date(users[id].end);
+    const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
+    
+    if (diffDays === 0) {
+      expiresToday.push({id: id, endDate: users[id].end, diffDays: diffDays});
+    } else if (diffDays === 1) {
+      expiresTomorrow.push({id: id, endDate: users[id].end, diffDays: diffDays});
+    } else if (diffDays < 0) {
+      expired.push({id: id, endDate: users[id].end, diffDays: Math.abs(diffDays)});
+    } else if (diffDays >= 2 && diffDays <= 7) {
+      expiringSoon.push({id: id, endDate: users[id].end, diffDays: diffDays});
+    }
+  });
+  
+  let html = '<h5>📅 ' + today.toLocaleDateString('ko-KR') + ' 알림 현황</h5>';
+  
+  if (expiresToday.length > 0) {
+    html += '<div class="urgent"><strong>🔴 오늘 종료 (' + expiresToday.length + '명)</strong><br>';
+    expiresToday.forEach(function(user) {
+      html += '@' + user.id + ' ';
+    });
+    html += '</div><br>';
+  }
+  
+  if (expiresTomorrow.length > 0) {
+    html += '<div class="urgent"><strong>⚠️ 내일 종료 (' + expiresTomorrow.length + '명)</strong><br>';
+    expiresTomorrow.forEach(function(user) {
+      html += '@' + user.id + ' ';
+    });
+    html += '</div><br>';
+  }
+  
+  if (expiringSoon.length > 0) {
+    html += '<div class="warning"><strong>📢 곧 종료 예정 (2-7일, ' + expiringSoon.length + '명)</strong><br>';
+    expiringSoon.forEach(function(user) {
+      html += '@' + user.id + '(' + user.diffDays + '일) ';
+    });
+    html += '</div><br>';
+  }
+  
+  if (expired.length > 0) {
+    html += '<div class="urgent"><strong>❌ 이미 종료됨 (' + expired.length + '명)</strong><br>';
+    expired.forEach(function(user) {
+      html += '@' + user.id + '(' + user.diffDays + '일전) ';
+    });
+    html += '</div><br>';
+  }
+  
+  if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expiringSoon.length === 0 && expired.length === 0) {
+    html += '<div class="green">✅ 오늘 알림할 회원이 없습니다!</div>';
+  }
+  
+  document.getElementById('alertResult').innerHTML = html;
 }
 
 // 카카오톡 메시지 생성
 function generateKakaoMessages() {
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  
-  const expiresToday = [];
-  const expiresTomorrow = [];
-  const expired = [];
-  
-  Object.keys(users).forEach(function(id) {
-    const endDate = new Date(users[id].end);
-    const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
-    
-    if (diffDays === 0) {
-      expiresToday.push(id);
-    } else if (diffDays === 1) {
-      expiresTomorrow.push(id);
-    } else if (diffDays < 0) {
-      expired.push(id);
-    }
-  });
-  
-  let html = '<h5>💬 카카오톡 메시지 (복사해서 사용하세요)</h5>';
-  
-  if (expiresToday.length > 0) {
-    const mentions = expiresToday.map(function(id) { return '@' + id; }).join(' ');
-    const message = mentions + '\n\n🔴 오늘(' + today.toLocaleDateString('ko-KR') + ') 이용기간이 종료됩니다.\n결제 후 카톡 멘션 주세요! 💳';
-    
-    html += '<div class="message-box">' + message + 
-            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
-  }
-  
-  if (expiresTomorrow.length > 0) {
-    const mentions = expiresTomorrow.map(function(id) { return '@' + id; }).join(' ');
-    const message = mentions + '\n\n⚠️ 내일(' + tomorrow.toLocaleDateString('ko-KR') + ') 이용기간이 종료됩니다.\n미리 결제해주세요! 💳';
-    
-    html += '<div class="message-box">' + message + 
-            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
-  }
-  
-  if (expired.length > 0) {
-    const mentions = expired.map(function(id) { return '@' + id; }).join(' ');
-    const message = mentions + '\n\n❌ 이용기간이 종료되었습니다.\n결제 후 카톡 멘션 주세요! 💳';
-    
-    html += '<div class="message-box">' + message + 
-            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
-  }
-  
-  if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expired.length === 0) {
-    html += '<div class="green">✅ 오늘 보낼 카톡 메시지가 없습니다!</div>';
-  }
-  
-  document.getElementById('alertResult').innerHTML = html;
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  const expiresToday = [];
+  const expiresTomorrow = [];
+  const expired = [];
+  
+  Object.keys(users).forEach(function(id) {
+    const endDate = new Date(users[id].end);
+    const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
+    
+    if (diffDays === 0) {
+      expiresToday.push(id);
+    } else if (diffDays === 1) {
+      expiresTomorrow.push(id);
+    } else if (diffDays < 0) {
+      expired.push(id);
+    }
+  });
+  
+  let html = '<h5>💬 카카오톡 메시지 (복사해서 사용하세요)</h5>';
+  
+  if (expiresToday.length > 0) {
+    const mentions = expiresToday.map(function(id) { return '@' + id; }).join(' ');
+    const message = mentions + '\n\n🔴 오늘(' + today.toLocaleDateString('ko-KR') + ') 이용기간이 종료됩니다.\n결제 후 카톡 멘션 주세요! 💳';
+    
+    html += '<div class="message-box">' + message + 
+            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
+  }
+  
+  if (expiresTomorrow.length > 0) {
+    const mentions = expiresTomorrow.map(function(id) { return '@' + id; }).join(' ');
+    const message = mentions + '\n\n⚠️ 내일(' + tomorrow.toLocaleDateString('ko-KR') + ') 이용기간이 종료됩니다.\n미리 결제해주세요! 💳';
+    
+    html += '<div class="message-box">' + message + 
+            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
+  }
+  
+  if (expired.length > 0) {
+    const mentions = expired.map(function(id) { return '@' + id; }).join(' ');
+    const message = mentions + '\n\n❌ 이용기간이 종료되었습니다.\n결제 후 카톡 멘션 주세요! 💳';
+    
+    html += '<div class="message-box">' + message + 
+            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
+  }
+  
+  if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expired.length === 0) {
+    html += '<div class="green">✅ 오늘 보낼 카톡 메시지가 없습니다!</div>';
+  }
+  
+  document.getElementById('alertResult').innerHTML = html;
 }
 
 // 텍스트 복사
 function copyText(text) {
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textarea);
-  alert('메시지가 복사되었습니다!');
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+  alert('메시지가 복사되었습니다!');
 }
 
 // TXT 저장
 function saveToTxt() {
-  const keys = Object.keys(users).sort();
-  let text = "아이디\t시작일\t종료일\t상태\n";
-  keys.forEach(function(id) {
-    const status = getDateStatus(users[id].end);
-    text += id + '\t' + users[id].start + '\t' + users[id].end + '\t' + status.text + '\n';
-  });
-  
-  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const today = new Date().toISOString().slice(0,10);
-  a.href = url;
-  a.download = '회원목록_' + today + '.txt';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  
-  alert('TXT 파일이 다운로드되었습니다.');
+  const keys = Object.keys(users).sort();
+  let text = "아이디\t시작일\t종료일\t상태\n";
+  keys.forEach(function(id) {
+    const status = getDateStatus(users[id].end);
+    text += id + '\t' + users[id].start + '\t' + users[id].end + '\t' + status.text + '\n';
+  });
+  
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const today = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = '회원목록_' + today + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  alert('TXT 파일이 다운로드되었습니다.');
 }
 
 // 백업 함수들
 function backupData() {
-  const dataStr = JSON.stringify(users, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const today = new Date().toISOString().slice(0,10);
-  a.href = url;
-  a.download = 'chaeum_backup_' + today + '.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  
-  alert('백업 파일이 다운로드되었습니다.');
+  const dataStr = JSON.stringify(users, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const today = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = 'chaeum_backup_' + today + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  alert('백업 파일이 다운로드되었습니다.');
 }
 
 function restoreData(input) {
-  const file = input.files[0];
-  if (!file) return;
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      users = data;
-      loadTable();
-      alert('데이터가 복원되었습니다.');
-    } catch (error) {
-      alert('잘못된 백업 파일입니다.');
-    }
-  };
-  reader.readAsText(file);
-  input.value = '';
+  const file = input.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      users = data;
+      loadTable();
+      alert('데이터가 복원되었습니다.');
+    } catch (error) {
+      alert('잘못된 백업 파일입니다.');
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
 }
 
 function resetToDefault() {
-  if (confirm('모든 데이터를 초기값으로 복원하시겠습니까? 현재 데이터는 모두 삭제됩니다.')) {
-    users = {
-      "aa--dd": {"start": "2025-05-15", "end": "2025-06-15"},
-      "epic_study": {"start": "2025-05-31", "end": "2025-06-30"},
-      "hellenjj": {"start": "2025-06-08", "end": "2025-07-08"},
-      "hge319": {"start": "2025-06-01", "end": "2025-07-01"},
-      "kim1160gagle": {"start": "2025-05-23", "end": "2025-06-23"},
-      "mark1536": {"start": "2025-06-01", "end": "2025-07-01"},
-      "meena1225": {"start": "2025-05-01", "end": "2025-06-01"},
-      "meena77": {"start": "2025-05-01", "end": "2025-06-01"},
-      "na_english": {"start": "2025-05-27", "end": "2025-06-27"},
-      "s016653": {"start": "2025-05-08", "end": "2025-06-08"},
-      "somsatag1225": {"start": "2025-06-01", "end": "2025-07-01"},
-      "thebrightedu": {"start": "2025-05-01", "end": "2025-06-01"},
-      "ussua": {"start": "2025-05-20", "end": "2025-06-20"},
-      "uyeong17": {"start": "2025-05-08", "end": "2025-06-08"},
-      "whiteyun8058": {"start": "2025-05-15", "end": "2025-06-15"},
-      "whiteyun901": {"start": "2025-05-15", "end": "2025-06-15"},
-      "yglajiasr632": {"start": "2025-05-08", "end": "2025-06-08"},
-      "ymmath00": {"start": "2025-05-28", "end": "2025-06-28"}
+  if (confirm('모든 데이터를 초기값으로 복원하시겠습니까? 현재 데이터는 모두 삭제됩니다.')) {
+    users = {
+      "aa--dd": {
+        "start": "2025-05-15",
+        "end": "2025-06-15"
+      },
+      "epic_study": {
+        "start": "2025-05-31",
+        "end": "2025-06-30"
+      },
+      "hellenjj": {
+        "start": "2025-06-08",
+        "end": "2025-07-08"
+      },
+      "hge319": {
+        "start": "2025-06-01",
+        "end": "2025-07-01"
+      },
+      "kim1160gagle": {
+        "start": "2025-05-23",
+        "end": "2025-06-23"
+      },
+      "mark1536": {
+        "start": "2025-06-01",
+        "end": "2025-07-01"
+      },
+      "meena1225": {
+        "start": "2025-06-01",
+        "end": "2025-07-01"
+      },
+      "meena77": {
+        "start": "2025-06-01",
+        "end": "2025-07-01"
+      },
+      "na_english": {
+        "start": "2025-05-27",
+        "end": "2025-06-27"
+      },
+      "somsatag1225": {
+        "start": "2025-06-01",
+        "end": "2025-07-01"
+      },
+      "thebrightedu": {
+        "start": "2025-06-08",
+        "end": "2025-07-08"
+      },
+      "ussua": {
+        "start": "2025-05-20",
+        "end": "2025-06-20"
+      },
+      "whiteyun8058": {
+        "start": "2025-05-18",
+        "end": "2025-06-18"
+      },
+      "whiteyun901": {
+        "start": "2025-05-18",
+        "end": "2025-06-18"
+      },
+      "ymmath00": {
+        "start": "2025-05-28",
+        "end": "2025-06-28"
+      }
     };
-    loadTable();
-    alert('초기 데이터로 복원되었습니다.');
-  }
+    loadTable();
+    alert('초기 데이터로 복원되었습니다.');
+  }
 }
 </script>
 </body>
