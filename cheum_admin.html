@@ -89,7 +89,6 @@
     .backup-buttons button { flex: 1; }
     .status-msg { margin-top: 10px; padding: 10px; border-radius: 5px; }
     .success { background-color: #d4edda; color: #155724; }
-    .warning { background-color: #fff3cd; color: #856404; }
   </style>
 </head>
 <body>
@@ -113,7 +112,7 @@
 <div id="adminPanel" class="admin-only admin-box">
   <h3>📋 관리자 전용</h3>
   
-    <div class="alert-section">
+  <div class="alert-section">
     <h4>🚨 종료 임박 알림</h4>
     <div class="alert-buttons">
       <button onclick="checkExpiringUsers()">📅 오늘 확인</button>
@@ -154,68 +153,45 @@
 <script>
 // 전역 변수
 const ADMIN_PASSWORD = "7702";
-let users = {
-  "aa--dd": {
-    "start": "2025-05-15",
-    "end": "2025-06-15"
-  },
-  "epic_study": {
-    "start": "2025-05-31",
-    "end": "2025-06-30"
-  },
-  "hellenjj": {
-    "start": "2025-06-08",
-    "end": "2025-07-08"
-  },
-  "hge319": {
-    "start": "2025-06-01",
-    "end": "2025-07-01"
-  },
-  "kim1160gagle": {
-    "start": "2025-05-23",
-    "end": "2025-06-23"
-  },
-  "mark1536": {
-    "start": "2025-06-01",
-    "end": "2025-07-01"
-  },
-  "meena1225": {
-    "start": "2025-06-01",
-    "end": "2025-07-01"
-  },
-  "meena77": {
-    "start": "2025-06-01",
-    "end": "2025-07-01"
-  },
-  "na_english": {
-    "start": "2025-05-27",
-    "end": "2025-06-27"
-  },
-  "somsatag1225": {
-    "start": "2025-06-01",
-    "end": "2025-07-01"
-  },
-  "thebrightedu": {
-    "start": "2025-06-08",
-    "end": "2025-07-08"
-  },
-  "ussua": {
-    "start": "2025-05-20",
-    "end": "2025-06-20"
-  },
-  "whiteyun8058": {
-    "start": "2025-05-18",
-    "end": "2025-06-18"
-  },
-  "whiteyun901": {
-    "start": "2025-05-18",
-    "end": "2025-06-18"
-  },
-  "ymmath00": {
-    "start": "2025-05-28",
-    "end": "2025-06-28"
-  }
+const defaultUsers = {
+  "aa--dd": {"start": "2025-05-15", "end": "2025-06-15"},
+  "epic_study": {"start": "2025-05-31", "end": "2025-06-30"},
+  "hellenjj": {"start": "2025-06-08", "end": "2025-07-08"},
+  "hge319": {"start": "2025-06-01", "end": "2025-07-01"},
+  "kim1160gagle": {"start": "2025-05-23", "end": "2025-06-23"},
+  "mark1536": {"start": "2025-06-01", "end": "2025-07-01"},
+  "meena1225": {"start": "2025-06-01", "end": "2025-07-01"},
+  "meena77": {"start": "2025-06-01", "end": "2025-07-01"},
+  "na_english": {"start": "2025-05-27", "end": "2025-06-27"},
+  "somsatag1225": {"start": "2025-06-01", "end": "2025-07-01"},
+  "thebrightedu": {"start": "2025-06-08", "end": "2025-07-08"},
+  "ussua": {"start": "2025-05-20", "end": "2025-06-20"},
+  "whiteyun8058": {"start": "2025-05-18", "end": "2025-06-18"},
+  "whiteyun901": {"start": "2025-05-18", "end": "2025-06-18"},
+  "ymmath00": {"start": "2025-05-28", "end": "2025-06-28"}
 };
+
+let users = {};
+
+// [수정됨] 페이지 로드 시 LocalStorage에서 데이터를 불러오는 함수
+document.addEventListener('DOMContentLoaded', function() {
+    loadUsersFromLocalStorage();
+});
+
+function loadUsersFromLocalStorage() {
+    const savedUsers = localStorage.getItem('chaeumUsers');
+    if (savedUsers) {
+        users = JSON.parse(savedUsers);
+    } else {
+        users = JSON.parse(JSON.stringify(defaultUsers)); // 초기 데이터 사용
+    }
+}
+
+// [추가됨] 데이터를 LocalStorage에 저장하는 함수
+function saveUsersToLocalStorage() {
+    localStorage.setItem('chaeumUsers', JSON.stringify(users));
+}
+
 
 // 유틸리티 함수들
 function getDateStatus(endDate) {
@@ -226,13 +202,6 @@ function getDateStatus(endDate) {
   if (diff > 7) return { text: '진행중', class: 'green' };
   if (diff > 0) return { text: diff + '일 남음', class: 'red' };
   return { text: '종료됨', class: 'red' };
-}
-
-function showMessage(elementId, message, className) {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.innerHTML = '<span class="' + className + '">' + message + '</span>';
-  }
 }
 
 // 사용자 조회 함수
@@ -318,9 +287,10 @@ function addUser() {
   
   const isEdit = users[id] ? true : false;
   users[id] = { start: start, end: end };
-  
+  
+  saveUsersToLocalStorage(); // [수정됨] 변경사항 저장
   loadTable();
-  // 입력 필드 초기화
+
   document.getElementById("newId").value = "";
   document.getElementById("startDate").value = "";
   document.getElementById("endDate").value = "";
@@ -334,8 +304,6 @@ function editUser(id) {
   document.getElementById("newId").value = id;
   document.getElementById("startDate").value = users[id].start;
   document.getElementById("endDate").value = users[id].end;
-  
-  // 화면 상단으로 스크롤
   document.getElementById("newId").scrollIntoView({ behavior: 'smooth' });
   document.getElementById("newId").focus();
 }
@@ -344,143 +312,67 @@ function editUser(id) {
 function deleteUser(id) {
   if (confirm(id + "을(를) 삭제할까요?")) {
     delete users[id];
+    saveUsersToLocalStorage(); // [수정됨] 변경사항 저장
     loadTable();
     alert(id + "가 삭제되었습니다.");
   }
 }
 
-// 종료 임박 확인
+// 종료 임박 확인 및 카톡 메시지 생성 (기존과 동일)
 function checkExpiringUsers() {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
   
-  const expiresToday = [];
-  const expiresTomorrow = [];
-  const expired = [];
-  const expiringSoon = [];
+  const expiresToday = [], expiresTomorrow = [], expired = [], expiringSoon = [];
   
-  Object.keys(users).forEach(function(id) {
+  Object.keys(users).forEach(id => {
     const endDate = new Date(users[id].end);
     const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
     
-    if (diffDays === 0) {
-      expiresToday.push({id: id, endDate: users[id].end, diffDays: diffDays});
-    } else if (diffDays === 1) {
-      expiresTomorrow.push({id: id, endDate: users[id].end, diffDays: diffDays});
-    } else if (diffDays < 0) {
-      expired.push({id: id, endDate: users[id].end, diffDays: Math.abs(diffDays)});
-    } else if (diffDays >= 2 && diffDays <= 7) {
-      expiringSoon.push({id: id, endDate: users[id].end, diffDays: diffDays});
-    }
+    if (diffDays === 0) expiresToday.push({id, ...users[id], diffDays});
+    else if (diffDays === 1) expiresTomorrow.push({id, ...users[id], diffDays});
+    else if (diffDays < 0) expired.push({id, ...users[id], diffDays: Math.abs(diffDays)});
+    else if (diffDays <= 7) expiringSoon.push({id, ...users[id], diffDays});
   });
   
-  let html = '<h5>📅 ' + today.toLocaleDateString('ko-KR') + ' 알림 현황</h5>';
-  
-  if (expiresToday.length > 0) {
-    html += '<div class="urgent"><strong>🔴 오늘 종료 (' + expiresToday.length + '명)</strong><br>';
-    expiresToday.forEach(function(user) {
-      html += '@' + user.id + ' ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expiresTomorrow.length > 0) {
-    html += '<div class="urgent"><strong>⚠️ 내일 종료 (' + expiresTomorrow.length + '명)</strong><br>';
-    expiresTomorrow.forEach(function(user) {
-      html += '@' + user.id + ' ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expiringSoon.length > 0) {
-    html += '<div class="warning"><strong>📢 곧 종료 예정 (2-7일, ' + expiringSoon.length + '명)</strong><br>';
-    expiringSoon.forEach(function(user) {
-      html += '@' + user.id + '(' + user.diffDays + '일) ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expired.length > 0) {
-    html += '<div class="urgent"><strong>❌ 이미 종료됨 (' + expired.length + '명)</strong><br>';
-    expired.forEach(function(user) {
-      html += '@' + user.id + '(' + user.diffDays + '일전) ';
-    });
-    html += '</div><br>';
-  }
-  
-  if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expiringSoon.length === 0 && expired.length === 0) {
-    html += '<div class="green">✅ 오늘 알림할 회원이 없습니다!</div>';
-  }
+  let html = `<h5>📅 ${today.toLocaleDateString('ko-KR')} 알림 현황</h5>`;
+  if (expiresToday.length > 0) html += `<div class="urgent"><strong>🔴 오늘 종료 (${expiresToday.length}명)</strong><br>${expiresToday.map(u => '@'+u.id).join(' ')}</div><br>`;
+  if (expiresTomorrow.length > 0) html += `<div class="urgent"><strong>⚠️ 내일 종료 (${expiresTomorrow.length}명)</strong><br>${expiresTomorrow.map(u => '@'+u.id).join(' ')}</div><br>`;
+  if (expiringSoon.length > 0) html += `<div class="warning"><strong>📢 곧 종료 예정 (2-7일, ${expiringSoon.length}명)</strong><br>${expiringSoon.map(u => `@${u.id}(${u.diffDays}일)`).join(' ')}</div><br>`;
+  if (expired.length > 0) html += `<div class="urgent"><strong>❌ 이미 종료됨 (${expired.length}명)</strong><br>${expired.map(u => `@${u.id}(${u.diffDays}일전)`).join(' ')}</div><br>`;
+  if (!html.includes('div')) html += '<div class="green">✅ 오늘 알림할 회원이 없습니다!</div>';
   
   document.getElementById('alertResult').innerHTML = html;
 }
 
-// 카카오톡 메시지 생성
 function generateKakaoMessages() {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
   
-  const expiresToday = [];
-  const expiresTomorrow = [];
-  const expired = [];
-  
-  Object.keys(users).forEach(function(id) {
+  const expiresToday = [], expiresTomorrow = [], expired = [];
+  Object.keys(users).forEach(id => {
     const endDate = new Date(users[id].end);
     const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
-    
-    if (diffDays === 0) {
-      expiresToday.push(id);
-    } else if (diffDays === 1) {
-      expiresTomorrow.push(id);
-    } else if (diffDays < 0) {
-      expired.push(id);
-    }
+    if (diffDays === 0) expiresToday.push(id);
+    else if (diffDays === 1) expiresTomorrow.push(id);
+    else if (diffDays < 0) expired.push(id);
   });
   
   let html = '<h5>💬 카카오톡 메시지 (복사해서 사용하세요)</h5>';
+  const createMsgBox = (mentions, text) => `<div class="message-box">${text}<button class="copy-btn" onclick="copyText('${text.replace(/'/g, "\\'").replace(/\n/g, "\\n")}')">복사</button></div>`;
   
-  if (expiresToday.length > 0) {
-    const mentions = expiresToday.map(function(id) { return '@' + id; }).join(' ');
-    const message = mentions + '\n\n🔴 오늘(' + today.toLocaleDateString('ko-KR') + ') 이용기간이 종료됩니다.\n결제 후 카톡 멘션 주세요! 💳';
-    
-    html += '<div class="message-box">' + message + 
-            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
-  }
-  
-  if (expiresTomorrow.length > 0) {
-    const mentions = expiresTomorrow.map(function(id) { return '@' + id; }).join(' ');
-    const message = mentions + '\n\n⚠️ 내일(' + tomorrow.toLocaleDateString('ko-KR') + ') 이용기간이 종료됩니다.\n미리 결제해주세요! 💳';
-    
-    html += '<div class="message-box">' + message + 
-            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
-  }
-  
-  if (expired.length > 0) {
-    const mentions = expired.map(function(id) { return '@' + id; }).join(' ');
-    const message = mentions + '\n\n❌ 이용기간이 종료되었습니다.\n결제 후 카톡 멘션 주세요! 💳';
-    
-    html += '<div class="message-box">' + message + 
-            '<button class="copy-btn" onclick="copyText(\'' + message.replace(/'/g, "\\'") + '\')">복사</button></div>';
-  }
-  
-  if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expired.length === 0) {
-    html += '<div class="green">✅ 오늘 보낼 카톡 메시지가 없습니다!</div>';
-  }
+  if (expiresToday.length > 0) html += createMsgBox(expiresToday.map(id => '@' + id).join(' '), `${expiresToday.map(id => '@' + id).join(' ')}\n\n🔴 오늘(${today.toLocaleDateString('ko-KR')}) 이용기간이 종료됩니다.\n결제 후 카톡 멘션 주세요! 💳`);
+  if (expiresTomorrow.length > 0) html += createMsgBox(expiresTomorrow.map(id => '@' + id).join(' '), `${expiresTomorrow.map(id => '@' + id).join(' ')}\n\n⚠️ 내일(${tomorrow.toLocaleDateString('ko-KR')}) 이용기간이 종료됩니다.\n미리 결제해주세요! 💳`);
+  if (expired.length > 0) html += createMsgBox(expired.map(id => '@' + id).join(' '), `${expired.map(id => '@' + id).join(' ')}\n\n❌ 이용기간이 종료되었습니다.\n결제 후 카톡 멘션 주세요! 💳`);
+  if (!html.includes('div')) html += '<div class="green">✅ 오늘 보낼 카톡 메시지가 없습니다!</div>';
   
   document.getElementById('alertResult').innerHTML = html;
 }
 
-// 텍스트 복사
 function copyText(text) {
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textarea);
-  alert('메시지가 복사되었습니다!');
+  navigator.clipboard.writeText(text).then(() => alert('메시지가 복사되었습니다!'));
 }
 
 // TXT 저장
@@ -498,29 +390,22 @@ function saveToTxt() {
   const today = new Date().toISOString().slice(0,10);
   a.href = url;
   a.download = '회원목록_' + today + '.txt';
-  document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  
   alert('TXT 파일이 다운로드되었습니다.');
 }
 
-// 백업 함수들
+// 백업/복원 함수
 function backupData() {
   const dataStr = JSON.stringify(users, null, 2);
   const blob = new Blob([dataStr], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  const today = new Date().toISOString().slice(0,10);
   a.href = url;
-  a.download = 'chaeum_backup_' + today + '.json';
-  document.body.appendChild(a);
+  a.download = `chaeum_backup_${new Date().toISOString().slice(0,10)}.json`;
   a.click();
-  document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  
-  alert('백업 파일이 다운로드되었습니다.');
+  alert('백업 파일이 다운로드되었습니다. 이 파일은 다른 컴퓨터에서 복원할 때 사용할 수 있습니다.');
 }
 
 function restoreData(input) {
@@ -532,6 +417,7 @@ function restoreData(input) {
     try {
       const data = JSON.parse(e.target.result);
       users = data;
+      saveUsersToLocalStorage(); // [수정됨] 복원된 데이터를 즉시 저장
       loadTable();
       alert('데이터가 복원되었습니다.');
     } catch (error) {
@@ -544,68 +430,8 @@ function restoreData(input) {
 
 function resetToDefault() {
   if (confirm('모든 데이터를 초기값으로 복원하시겠습니까? 현재 데이터는 모두 삭제됩니다.')) {
-    users = {
-      "aa--dd": {
-        "start": "2025-05-15",
-        "end": "2025-06-15"
-      },
-      "epic_study": {
-        "start": "2025-05-31",
-        "end": "2025-06-30"
-      },
-      "hellenjj": {
-        "start": "2025-06-08",
-        "end": "2025-07-08"
-      },
-      "hge319": {
-        "start": "2025-06-01",
-        "end": "2025-07-01"
-      },
-      "kim1160gagle": {
-        "start": "2025-05-23",
-        "end": "2025-06-23"
-      },
-      "mark1536": {
-        "start": "2025-06-01",
-        "end": "2025-07-01"
-      },
-      "meena1225": {
-        "start": "2025-06-01",
-        "end": "2025-07-01"
-      },
-      "meena77": {
-        "start": "2025-06-01",
-        "end": "2025-07-01"
-      },
-      "na_english": {
-        "start": "2025-05-27",
-        "end": "2025-06-27"
-      },
-      "somsatag1225": {
-        "start": "2025-06-01",
-        "end": "2025-07-01"
-      },
-      "thebrightedu": {
-        "start": "2025-06-08",
-        "end": "2025-07-08"
-      },
-      "ussua": {
-        "start": "2025-05-20",
-        "end": "2025-06-20"
-      },
-      "whiteyun8058": {
-        "start": "2025-05-18",
-        "end": "2025-06-18"
-      },
-      "whiteyun901": {
-        "start": "2025-05-18",
-        "end": "2025-06-18"
-      },
-      "ymmath00": {
-        "start": "2025-05-28",
-        "end": "2025-06-28"
-      }
-    };
+    users = JSON.parse(JSON.stringify(defaultUsers));
+    saveUsersToLocalStorage(); // [수정됨] 초기화 후 즉시 저장
     loadTable();
     alert('초기 데이터로 복원되었습니다.');
   }
