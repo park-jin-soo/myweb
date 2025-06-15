@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 기반 이미지 다운로더 (자동 번역 기능)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px S15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #3498db;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        button.save-btn {
+            background-color: #2ecc71;
+        }
+        button.save-btn:hover {
+            background-color: #27ae60;
+        }
+        #log-area {
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            padding: 10px;
+            height: 150px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #2c3e50;
+        }
+        .api-status {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        .api-status.ready {
+            background-color: #e8f6f3;
+            color: #1abc9c;
+        }
+        .api-status.not-ready {
+            background-color: #fbeee6;
+            color: #e67e22;
+        }
+        .loader {
+            display: none;
+            margin: 10px auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        #translation-result {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+            height: 15px;
+            text-align: right;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>이미지 대량 다운로더 (자동 번역)</h1>
+
+        <div id="api-setup">
+            <h2>1. API 키 설정 (최초 1회)</h2>
+            <div id="api-status" class="api-status not-ready">API 키를 먼저 저장해주세요.</div>
+            <div class="form-group">
+                <label for="pexels-key">Pexels API 키</label>
+                <input type="password" id="pexels-key" placeholder="Pexels 키를 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="pixabay-key">Pixabay API 키</label>
+                <input type="password" id="pixabay-key" placeholder="Pixabay 키를 입력하세요">
+            </div>
+            <button id="save-keys-btn" class="save-btn">API 키 저장</button>
+        </div>
+
+        <hr style="margin: 30px 0; border: 1px solid #eee;">
+
+        <div id="downloader-ui">
+            <h2>2. 이미지 검색 및 다운로드</h2>
+            <div class="form-group">
+                <label for="source">이미지 소스 선택</label>
+                <select id="source">
+                    <option value="pexels">Pexels</option>
+                    <option value="pixabay">Pixabay</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="keyword">검색 키워드 (한글 입력 가능)</label>
+                <input type="text" id="keyword" placeholder="예: 바다, 귀여운 고양이">
+                <div id="translation-result"></div>
+            </div>
+            <div class="form-group">
+                <label for="quantity">다운로드 수량</label>
+                <input type="number" id="quantity" value="5" min="1" max="80">
+            </div>
+            <button id="download-btn">다운로드 시작</button>
+        </div>
+        
+        <div id="loader" class="loader"></div>
+        <pre id="log-area">다운로드 로그가 여기에 표시됩니다.</pre>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pexelsKeyInput = document.getElementById('pexels-key');
+            const pixabayKeyInput = document.getElementById('pixabay-key');
+            const saveKeysBtn = document.getElementById('save-keys-btn');
+            const apiStatus = document.getElementById('api-status');
+            const sourceSelect = document.getElementById('source');
+            const keywordInput = document.getElementById('keyword');
+            const quantityInput = document.getElementById('quantity');
+            const downloadBtn = document.getElementById('download-btn');
+            const logArea = document.getElementById('log-area');
+            const loader = document.getElementById('loader');
+            const translationResultDiv = document.getElementById('translation-result');
+
+            let debounceTimer;
+            let translatedKeyword = '';
+
+            function loadApiKeys() {
+                const pexelsKey = localStorage.getItem('pexelsApiKey');
+                const pixabayKey = localStorage.getItem('pixabayApiKey');
+                if (pexelsKey && pixabayKey) {
+                    apiStatus.textContent = 'API 키가 안전하게 저장되었습니다.';
+                    apiStatus.className = 'api-status ready';
+                    pexelsKeyInput.placeholder = "저장됨";
+                    pixabayKeyInput.placeholder = "저장됨";
+                    return true;
+                } else {
+                    apiStatus.textContent = 'API 키를 먼저 저장해주세요.';
+                    apiStatus.className = 'api-status not-ready';
+                    return false;
+                }
+            }
+
+            saveKeysBtn.addEventListener('click', () => {
+                const pexelsKey = pexelsKeyInput.value.trim();
+                const pixabayKey = pixabayKeyInput.value.trim();
+                if (pexelsKey && pixabayKey) {
+                    localStorage.setItem('pexelsApiKey', pexelsKey);
+                    localStorage.setItem('pixabayApiKey', pixabayKey);
+                    pexelsKeyInput.value = '';
+                    pixabayKeyInput.value = '';
+                    log('API 키가 브라우저에 안전하게 저장되었습니다.');
+                    loadApiKeys();
+                } else {
+                    alert('Pexels와 Pixabay API 키를 모두 입력해주세요.');
+                }
+            });
+            
+            // --- 번역 기능 추가 ---
+            keywordInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                const koreanKeyword = keywordInput.value.trim();
+                translatedKeyword = ''; // 키워드가 변경되면 초기화
+
+                if (!koreanKeyword) {
+                    translationResultDiv.textContent = '';
+                    return;
+                }
+
+                // 한글이 포함되어 있을 때만 번역 실행
+                if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(koreanKeyword)) {
+                    translationResultDiv.textContent = '번역 중...';
+                    debounceTimer = setTimeout(async () => {
+                        try {
+                            const englishKeyword = await translateText(koreanKeyword);
+                            translationResultDiv.innerHTML = `&rarr; 영문: <strong>${englishKeyword}</strong>`;
+                            translatedKeyword = englishKeyword;
+                        } catch (error) {
+                            translationResultDiv.textContent = '번역 실패';
+                            console.error(error);
+                        }
+                    }, 500); // 0.5초 디바운스
+                } else {
+                    translationResultDiv.textContent = '';
+                }
+            });
+
+            async function translateText(text) {
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=ko|en`;
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Translation API request failed');
+                }
+                const data = await response.json();
+                if(data.responseData && data.responseData.translatedText) {
+                    return data.responseData.translatedText;
+                }
+                throw new Error('Could not parse translation.');
+            }
+            // --- 번역 기능 끝 ---
+
+            downloadBtn.addEventListener('click', async () => {
+                if (!loadApiKeys()) {
+                    alert('API 키를 먼저 설정하고 저장해주세요.');
+                    return;
+                }
+
+                const source = sourceSelect.value;
+                const originalKeyword = keywordInput.value.trim();
+                const quantity = parseInt(quantityInput.value, 10);
+                
+                // 번역된 키워드가 있으면 사용하고, 없으면 원본 키워드 사용
+                const finalKeyword = translatedKeyword || originalKeyword;
+
+                if (!finalKeyword) {
+                    alert('검색 키워드를 입력해주세요.');
+                    return;
+                }
+
+                logArea.textContent = '';
+                log(`[${source}] '${originalKeyword}' 검색 시작`);
+                if(translatedKeyword) log(`(번역된 영문 '${finalKeyword}' 사용)`);
+                log(`${quantity}개 다운로드를 요청합니다.`);
+                
+                loader.style.display = 'block';
+                downloadBtn.disabled = true;
+
+                try {
+                    const apiKey = (source === 'pexels') ? localStorage.getItem('pexelsApiKey') : localStorage.getItem('pixabayApiKey');
+                    const response = await fetchImages(source, finalKeyword, quantity, apiKey);
+                    const images = parseResponse(source, response);
+
+                    if (images.length === 0) {
+                        log('검색 결과가 없습니다. 다른 키워드로 시도해보세요.');
+                        return;
+                    }
+                    
+                    log(`총 ${images.length}개의 이미지를 찾았습니다. 다운로드를 시작합니다...`);
+                    
+                    for (let i = 0; i < images.length; i++) {
+                        const img = images[i];
+                        log(`[${i + 1}/${images.length}] 다운로드: ${img.filename}`);
+                        await downloadImage(img.url, img.filename);
+                        await sleep(500);
+                    }
+                    log('모든 다운로드가 완료되었습니다!');
+                } catch (error) {
+                    log(`오류 발생: ${error.message}`);
+                    console.error(error);
+                } finally {
+                    loader.style.display = 'none';
+                    downloadBtn.disabled = false;
+                }
+            });
+
+            async function fetchImages(source, query, perPage, apiKey) {
+                let url = '';
+                let headers = {};
+                if (source === 'pexels') {
+                    url = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=${perPage}`;
+                    headers = { 'Authorization': apiKey };
+                } else {
+                    url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(query)}&image_type=photo&per_page=${perPage}`;
+                }
+                const response = await fetch(url, { headers });
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) throw new Error('API 키가 유효하지 않습니다.');
+                    throw new Error(`API 요청 실패: ${response.status}`);
+                }
+                return response.json();
+            }
+
+            function parseResponse(source, data) {
+                if (source === 'pexels') {
+                    return data.photos.map(p => ({ url: p.src.original, filename: `pexels_${p.id}.jpg` }));
+                } else {
+                    return data.hits.map(h => ({ url: h.largeImageURL, filename: `pixabay_${h.id}.jpg` }));
+                }
+            }
+            
+            async function downloadImage(url, filename) {
+                try {
+                    const response = await fetch(url);
+                    const blob = await response.blob();
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(a.href);
+                } catch (error) {
+                    log(`다운로드 실패: ${filename}`);
+                    console.error('Download error:', error);
+                }
+            }
+
+            function log(message) {
+                logArea.textContent += message + '\n';
+                logArea.scrollTop = logArea.scrollHeight;
+            }
+
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            loadApiKeys();
+        });
+    </script>
+
+</body>
+</html>
