@@ -1,318 +1,318 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>채움 스댓공 고객조회기</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body { 
-      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-      max-width: 1000px; 
-      margin: 0 auto; 
-      padding: 20px; 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-    
-    h1 { 
-      text-align: center; 
-      color: white;
-      margin-bottom: 30px;
-      font-size: 2.2em;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    
-    .box, .admin-box { 
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 25px; 
-      margin-bottom: 25px; 
-      border-radius: 15px; 
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    h3 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-      font-size: 1.3em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    input, button { 
-      padding: 12px 16px; 
-      margin: 8px 0; 
-      width: 100%; 
-      border: 2px solid #e1e8ed;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: inherit;
-      transition: all 0.3s ease;
-    }
-    
-    input:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    
-    button { 
-      background: linear-gradient(45deg, #667eea, #764ba2);
-      color: white; 
-      font-weight: 600; 
-      border: none; 
-      cursor: pointer;
-      text-transform: none;
-      transition: all 0.3s ease;
-    }
-    
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-    
-    button:active {
-      transform: translateY(0);
-    }
-    
-    .result { 
-      margin-top: 20px; 
-      font-size: 16px; 
-      padding: 15px;
-      background: rgba(248, 249, 250, 0.8);
-      border-radius: 8px;
-      border-left: 4px solid #667eea;
-    }
-    
-    .red { color: #e74c3c; font-weight: 600; }
-    .blue { color: #3498db; font-weight: 600; }
-    .green { color: #27ae60; font-weight: 600; }
-    
-    .admin-only { display: none; }
-    
-    .row { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px; 
-      margin-bottom: 15px;
-    }
-    
-    table { 
-      width: 100%; 
-      margin-top: 20px; 
-      border-collapse: collapse;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    th, td { 
-      padding: 12px 8px; 
-      border-bottom: 1px solid #e1e8ed; 
-      text-align: center;
-      font-size: 14px;
-    }
-    
-    th {
-      background: linear-gradient(45deg, #667eea, #764ba2);
-      color: white;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    tr:hover {
-      background-color: rgba(102, 126, 234, 0.05);
-    }
-    
-    .footer { 
-      text-align: center; 
-      margin: 30px 0; 
-      font-size: 18px; 
-      font-weight: bold;
-      color: white;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-    }
-    
-    .alert-section { 
-      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-      border: 2px solid #fdcb6e; 
-      border-radius: 12px; 
-      padding: 20px; 
-      margin-bottom: 25px;
-    }
-    
-    .alert-buttons { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr;
-      gap: 15px; 
-      margin: 15px 0; 
-    }
-    
-    .alert-buttons button { 
-      background: linear-gradient(45deg, #e17055, #d63031);
-      font-weight: 600;
-    }
-    
-    .alert-buttons button:hover { 
-      background: linear-gradient(45deg, #d63031, #c0392b);
-    }
-    
-    .alert-result { 
-      margin-top: 20px; 
-      padding: 15px; 
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 8px; 
-      border: 1px solid #ddd; 
-      max-height: 400px; 
-      overflow-y: auto;
-    }
-    
-    .urgent { 
-      background: linear-gradient(135deg, #fab1a0, #e17055);
-      color: white; 
-      padding: 10px 15px; 
-      border-radius: 8px; 
-      margin: 8px 0;
-      font-weight: 500;
-    }
-    
-    .warning { 
-      background: linear-gradient(135deg, #fdcb6e, #e17055);
-      color: white; 
-      padding: 10px 15px; 
-      border-radius: 8px; 
-      margin: 8px 0;
-      font-weight: 500;
-    }
-    
-    .copy-btn { 
-      background: linear-gradient(45deg, #00b894, #00a085);
-      color: white; 
-      border: none; 
-      padding: 8px 12px; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      font-size: 12px; 
-      margin-left: 10px;
-      font-weight: 500;
-    }
-    
-    .copy-btn:hover { 
-      background: linear-gradient(45deg, #00a085, #008f7a);
-    }
-    
-    .message-box { 
-      background: rgba(248, 249, 250, 0.9);
-      border: 2px solid #e1e8ed; 
-      padding: 15px; 
-      margin: 15px 0; 
-      border-radius: 8px; 
-      font-family: 'Courier New', monospace; 
-      white-space: pre-wrap;
-      position: relative;
-    }
-    
-    .backup-section { 
-      margin-top: 25px; 
-      padding-top: 25px; 
-      border-top: 3px solid rgba(102, 126, 234, 0.2);
-    }
-    
-    .backup-buttons { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px; 
-      margin-top: 15px; 
-    }
-    
-    .status-msg { 
-      margin-top: 15px; 
-      padding: 12px; 
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    
-    .success { 
-      background: linear-gradient(135deg, #d1f2eb, #a3e4d7);
-      color: #0c5460; 
-      border-left: 4px solid #17a2b8;
-    }
-    
-    .table-actions button {
-      width: auto;
-      padding: 6px 12px;
-      margin: 2px;
-      font-size: 12px;
-      min-width: 60px;
-    }
-    
-    .edit-btn {
-      background: linear-gradient(45deg, #74b9ff, #0984e3) !important;
-    }
-    
-    .delete-btn {
-      background: linear-gradient(45deg, #fd79a8, #e84393) !important;
-    }
-    
-    .save-status {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(39, 174, 96, 0.9);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-size: 14px;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .save-status.show {
-      opacity: 1;
-    }
-    
-    @media (max-width: 768px) {
-      body {
-        padding: 15px;
-      }
-      
-      .row {
-        grid-template-columns: 1fr;
-      }
-      
-      .alert-buttons {
-        grid-template-columns: 1fr;
-      }
-      
-      .backup-buttons {
-        grid-template-columns: 1fr;
-      }
-      
-      table {
-        font-size: 12px;
-      }
-      
-      th, td {
-        padding: 8px 4px;
-      }
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>채움 스댓공 고객조회기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body { 
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      max-width: 1000px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    h1 { 
+      text-align: center; 
+      color: white;
+      margin-bottom: 30px;
+      font-size: 2.2em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .box, .admin-box { 
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 25px; 
+      margin-bottom: 25px; 
+      border-radius: 15px; 
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    h3 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    input, button { 
+      padding: 12px 16px; 
+      margin: 8px 0; 
+      width: 100%; 
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    button { 
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white; 
+      font-weight: 600; 
+      border: none; 
+      cursor: pointer;
+      text-transform: none;
+      transition: all 0.3s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .result { 
+      margin-top: 20px; 
+      font-size: 16px; 
+      padding: 15px;
+      background: rgba(248, 249, 250, 0.8);
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .red { color: #e74c3c; font-weight: 600; }
+    .blue { color: #3498db; font-weight: 600; }
+    .green { color: #27ae60; font-weight: 600; }
+    
+    .admin-only { display: none; }
+    
+    .row { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px; 
+      margin-bottom: 15px;
+    }
+    
+    table { 
+      width: 100%; 
+      margin-top: 20px; 
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    th, td { 
+      padding: 12px 8px; 
+      border-bottom: 1px solid #e1e8ed; 
+      text-align: center;
+      font-size: 14px;
+    }
+    
+    th {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    tr:hover {
+      background-color: rgba(102, 126, 234, 0.05);
+    }
+    
+    .footer { 
+      text-align: center; 
+      margin: 30px 0; 
+      font-size: 18px; 
+      font-weight: bold;
+  _      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .alert-section { 
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      border: 2px solid #fdcb6e; 
+      border-radius: 12px; 
+      padding: 20px; 
+      margin-bottom: 25px;
+    }
+    
+    .alert-buttons { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr;
+      gap: 15px; 
+      margin: 15px 0; 
+    }
+    
+    .alert-buttons button { 
+      background: linear-gradient(45deg, #e17055, #d63031);
+      font-weight: 600;
+    }
+    
+    .alert-buttons button:hover { 
+      background: linear-gradient(45deg, #d63031, #c0392b);
+    }
+    
+    .alert-result { 
+      margin-top: 20px; 
+      padding: 15px; 
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px; 
+      border: 1px solid #ddd; 
+      max-height: 400px; 
+      overflow-y: auto;
+    }
+    
+    .urgent { 
+      background: linear-gradient(135deg, #fab1a0, #e17055);
+      color: white; 
+      padding: 10px 15px; 
+      border-radius: 8px; 
+      margin: 8px 0;
+      font-weight: 500;
+    }
+    
+    .warning { 
+      background: linear-gradient(135deg, #fdcb6e, #e17055);
+      color: white; 
+      padding: 10px 15px; 
+      border-radius: 8px; 
+      margin: 8px 0;
+      font-weight: 500;
+    }
+    
+    .copy-btn { 
+      background: linear-gradient(45deg, #00b894, #00a085);
+      color: white; 
+      border: none; 
+      padding: 8px 12px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-size: 12px; 
+      margin-left: 10px;
+      font-weight: 500;
+    }
+    
+    .copy-btn:hover { 
+      background: linear-gradient(45deg, #00a085, #008f7a);
+    }
+    
+    .message-box { 
+      background: rgba(248, 249, 250, 0.9);
+      border: 2px solid #e1e8ed; 
+      padding: 15px; 
+      margin: 15px 0; 
+      border-radius: 8px; 
+      font-family: 'Courier New', monospace; 
+      white-space: pre-wrap;
+      position: relative;
+    }
+    
+    .backup-section { 
+      margin-top: 25px; 
+      padding-top: 25px; 
+      border-top: 3px solid rgba(102, 126, 234, 0.2);
+    }
+    
+    .backup-buttons { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px; 
+      margin-top: 15px; 
+    }
+    
+    .status-msg { 
+      margin-top: 15px; 
+      padding: 12px; 
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    .success { 
+      background: linear-gradient(135deg, #d1f2eb, #a3e4d7);
+      color: #0c5460; 
+      border-left: 4px solid #17a2b8;
+    }
+    
+    .table-actions button {
+      width: auto;
+      padding: 6px 12px;
+      margin: 2px;
+      font-size: 12px;
+      min-width: 60px;
+    }
+    
+    .edit-btn {
+      background: linear-gradient(45deg, #74b9ff, #0984e3) !important;
+    }
+    
+    .delete-btn {
+      background: linear-gradient(45deg, #fd79a8, #e84393) !important;
+    }
+    
+    .save-status {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(39, 174, 96, 0.9);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .save-status.show {
+      opacity: 1;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      
+      .row {
+        grid-template-columns: 1fr;
+      }
+      
+      .alert-buttons {
+        grid-template-columns: 1fr;
+      }
+      
+      .backup-buttons {
+        grid-template-columns: 1fr;
+      }
+      
+      table {
+        font-size: 12px;
+      }
+      
+      th, td {
+        padding: 8px 4px;
+      }
+    }
+  </style>
 </head>
 <body>
 <h1>🎓 채움 스댓공 고객 종료일 조회</h1>
@@ -322,96 +322,98 @@
 <div class="save-status" id="saveStatus">💾 메모리 저장됨</div>
 
 <div class="box">
-  <h3>👤 고객 전용 조회</h3>
-  <input type="text" id="userSearch" placeholder="아이디를 입력하세요">
-  <button onclick="searchUser()">🔍 조회하기</button>
-  <div id="searchResult" class="result"></div>
+  <h3>👤 고객 전용 조회</h3>
+  <input type="text" id="userSearch" placeholder="아이디를 입력하세요">
+  <button onclick="searchUser()">🔍 조회하기</button>
+  <div id="searchResult" class="result"></div>
 </div>
 
 <div class="box">
-  <h3>🔐 관리자 로그인</h3>
-  <input type="password" id="adminPass" placeholder="관리자 비밀번호를 입력하세요">
-  <button onclick="loginAdmin()">🚀 로그인</button>
+  <h3>🔐 관리자 로그인</h3>
+  <input type="password" id="adminPass" placeholder="관리자 비밀번호를 입력하세요">
+  <button onclick="loginAdmin()">🚀 로그인</button>
 </div>
 
 <div id="adminPanel" class="admin-only admin-box">
-  <h3>📋 관리자 전용 패널</h3>
-  
-  <div class="alert-section">
-    <h4>🚨 종료 임박 알림 시스템</h4>
-    <div class="alert-buttons">
-      <button onclick="checkExpiringUsers()">📅 오늘 상황 확인</button>
-      <button onclick="generateKakaoMessages()">💬 카톡 메시지 생성</button>
-    </div>
-    <div id="alertResult" class="alert-result"></div>
-  </div>
-  
-  <h4>➕ 회원 추가/수정</h4>
-  <div class="row">
-    <div><input type="text" id="newId" placeholder="아이디 입력"></div>
-    <div><input type="date" id="startDate"></div>
-    <div><input type="date" id="endDate"></div>
-  </div>
-  <button onclick="addUser()">💾 아이디 추가/수정</button>
-  
-  <div class="row" style="margin-top: 20px;">
-    <button onclick="saveToTxt()">📄 TXT로 내보내기</button>
-    <button onclick="manualSave()" style="background: linear-gradient(45deg, #27ae60, #2ecc71);">💾 수동 저장</button>
-  </div>
-  
-  <div id="memberCount" class="result"></div>
-  <div id="statusMessage"></div>
-  
-  <div class="backup-section">
-    <h4>🔄 데이터 백업 및 복원</h4>
-    <div class="backup-buttons">
-      <button onclick="backupData()">📤 데이터 백업</button>
-      <button onclick="document.getElementById('fileInput').click()">📥 데이터 복원</button>
-      <button onclick="resetToDefault()">🔄 초기화</button>
-    </div>
-    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="restoreData(this)">
-    <div class="status-msg" style="background: rgba(255, 193, 7, 0.1); color: #856404; border-left: 4px solid #ffc107;">
-      ⚠️ <strong>중요 알림:</strong> 이 시스템은 메모리 기반으로 작동합니다.<br>
-      📌 브라우저를 새로고침하거나 닫으면 모든 변경사항이 사라집니다.<br>
-      💾 중요한 데이터는 반드시 <strong>"데이터 백업"</strong> 기능을 사용하여 파일로 저장하세요!
-    </div>
-  </div>
-  
-  <h4 style="margin-top: 30px;">📊 전체 회원 목록</h4>
-  <table id="userTable">
-    <thead>
-      <tr>
-        <th>아이디</th>
-        <th>시작일</th>
-        <th>종료일</th>
-        <th>상태</th>
-        <th>관리</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <h3>📋 관리자 전용 패널</h3>
+  
+  <div class="alert-section">
+    <h4>🚨 종료 임박 알림 시스템</h4>
+    <div class="alert-buttons">
+      <button onclick="checkExpiringUsers()">📅 오늘 상황 확인</button>
+      <button onclick="generateKakaoMessages()">💬 카톡 메시지 생성</button>
+    </div>
+    <div id="alertResult" class="alert-result"></div>
+  </div>
+  
+  <h4>➕ 회원 추가/수정</h4>
+  <div class="row">
+    <div><input type="text" id="newId" placeholder="아이디 입력"></div>
+    <div><input type="date" id="startDate"></div>
+    <div><input type="date" id="endDate"></div>
+  </div>
+  <button onclick="addUser()">💾 아이디 추가/수정</button>
+  
+  <div class="row" style="margin-top: 20px;">
+    <button onclick="saveToTxt()">📄 TXT로 내보내기</button>
+    <button onclick="manualSave()" style="background: linear-gradient(45deg, #27ae60, #2ecc71);">💾 수동 저장</button>
+  </div>
+  
+  <div id="memberCount" class="result"></div>
+  <div id="statusMessage"></div>
+  
+  <div class="backup-section">
+    <h4>🔄 데이터 백업 및 복원</h4>
+    <div class="backup-buttons">
+      <button onclick="backupData()">📤 데이터 백업</button>
+      <button onclick="document.getElementById('fileInput').click()">📥 데이터 복원</button>
+      <button onclick="resetToDefault()">🔄 초기화</button>
+    </div>
+    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="restoreData(this)">
+    <div class="status-msg" style="background: rgba(255, 193, 7, 0.1); color: #856404; border-left: 4px solid #ffc107;">
+      ⚠️ <strong>중요 알림:</strong> 이 시스템은 메모리 기반으로 작동합니다.<br>
+      📌 브라우저를 새로고침하거나 닫으면 모든 변경사항이 사라집니다.<br>
+      💾 중요한 데이터는 반드시 <strong>"데이터 백업"</strong> 기능을 사용하여 파일로 저장하세요!
+    </div>
+  </div>
+  
+  <h4 style="margin-top: 30px;">📊 전체 회원 목록</h4>
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>아이디</th>
+        <th>시작일</th>
+        <th>종료일</th>
+        <th>상태</th>
+        <th>관리</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
 <script>
 const ADMIN_PASSWORD = "7702";
-const STORAGE_KEY = "chaeumUsersData";
 
 const defaultUsers = {
-  "aa--dd": {"start": "2025-05-15", "end": "2025-06-15"},
-  "epic_study": {"start": "2025-05-31", "end": "2025-06-30"},
-  "hellenjj": {"start": "2025-06-08", "end": "2025-07-08"},
-  "hge319": {"start": "2025-06-01", "end": "2025-07-01"},
-  "kim1160gagle": {"start": "2025-05-23", "end": "2025-06-23"},
-  "mark1536": {"start": "2025-06-01", "end": "2025-07-01"},
-  "meena1225": {"start": "2025-06-01", "end": "2025-07-01"},
-  "meena77": {"start": "2025-06-01", "end": "2025-07-01"},
-  "na_english": {"start": "2025-05-27", "end": "2025-06-27"},
-  "somsatag1225": {"start": "2025-06-01", "end": "2025-07-01"},
-  "thebrightedu": {"start": "2025-06-08", "end": "2025-07-08"},
-  "ussua": {"start": "2025-05-20", "end": "2025-06-20"},
-  "whiteyun8058": {"start": "2025-05-18", "end": "2025-06-18"},
-  "whiteyun901": {"start": "2025-05-18", "end": "2025-06-18"},
-  "ymmath00": {"start": "2025-05-28", "end": "2025-06-28"}
+    "epic_study": { "start": "2025-06-30", "end": "2025-07-30" },
+    "hellenjj": { "start": "2025-06-08", "end": "2025-07-08" },
+    "hge319": { "start": "2025-06-01", "end": "2025-07-01" },
+    "kim1160gagle": { "start": "2025-05-23", "end": "2025-06-23" },
+    "mark1536": { "start": "2025-07-01", "end": "2025-08-01" },
+    "meena1225": { "start": "2025-07-01", "end": "2025-08-01" },
+    "meena77": { "start": "2025-07-01", "end": "2025-08-01" },
+    "na_english": { "start": "2025-06-30", "end": "2025-07-30" },
+    "somsatag1225": { "start": "2025-07-01", "end": "2025-08-01" },
+    "thebrightedu": { "start": "2025-06-08", "end": "2025-07-08" },
+    "ussua": { "start": "2025-06-20", "end": "2025-07-21" },
+    "whiteyun8058": { "start": "2025-05-18", "end": "2025-06-18" },
+    "whiteyun901": { "start": "2025-05-18", "end": "2025-06-18" },
+    "ymmath00": { "start": "2025-06-28", "end": "2025-07-28" },
+    "uyeong17": { "start": "2025-06-25", "end": "2025-07-25" },
+    "yglajiasr632": { "start": "2025-06-25", "end": "2025-07-25" },
+    "eg6404": { "start": "2025-07-02", "end": "2025-10-02" },
+    "yoong_aa33": { "start": "2025-07-02", "end": "2025-08-02" }
 };
 
 let users = {};
@@ -420,476 +422,482 @@ let hasUnsavedChanges = false;
 
 // 페이지 로딩 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
-    
-    // 페이지 종료 시 경고
-    window.addEventListener('beforeunload', function(e) {
-        if (hasUnsavedChanges && isLoggedIn) {
-            e.preventDefault();
-            e.returnValue = '저장되지 않은 변경사항이 있습니다. 정말 나가시겠습니까?';
-            return e.returnValue;
-        }
-    });
+    initializeApp();
+    
+    // 페이지 종료 시 경고
+    window.addEventListener('beforeunload', function(e) {
+        if (hasUnsavedChanges && isLoggedIn) {
+            e.preventDefault();
+            e.returnValue = '저장되지 않은 변경사항이 있습니다. 정말 나가시겠습니까?';
+            return e.returnValue;
+        }
+    });
 });
 
 function initializeApp() {
-    console.log('앱 초기화 중...');
-    loadUsersFromMemory();
-    console.log('로드된 사용자 수:', Object.keys(users).length);
+    console.log('앱 초기화 중...');
+    loadUsersFromMemory();
+    console.log('로드된 사용자 수:', Object.keys(users).length);
 }
 
 function loadUsersFromMemory() {
-    try {
-        // localStorage 대신 초기 데이터 사용
-        users = JSON.parse(JSON.stringify(defaultUsers));
-        console.log('초기 데이터로 설정됨 (메모리 기반)');
-        hasUnsavedChanges = false;
-    } catch (error) {
-        console.error('데이터 초기화 실패:', error);
-        users = JSON.parse(JSON.stringify(defaultUsers));
-    }
+    try {
+        // localStorage 대신 초기 데이터 사용
+        users = JSON.parse(JSON.stringify(defaultUsers));
+        console.log('초기 데이터로 설정됨 (메모리 기반)');
+        hasUnsavedChanges = false;
+    } catch (error) {
+        console.error('데이터 초기화 실패:', error);
+        users = {};
+    }
 }
 
 function saveUsersToMemory(silent = false) {
-    try {
-        // 메모리에서는 이미 저장된 상태이므로 상태만 업데이트
-        hasUnsavedChanges = false;
-        
-        if (!silent) {
-            showSaveStatus();
-        }
-        
-        console.log('데이터 메모리 저장 완료, 회원 수:', Object.keys(users).length);
-        return true;
-    } catch (error) {
-        console.error('저장 실패:', error);
-        alert('데이터 저장에 실패했습니다: ' + error.message);
-        return false;
-    }
+    try {
+        // 메모리에서는 이미 저장된 상태이므로 상태만 업데이트
+        hasUnsavedChanges = false;
+        
+        if (!silent) {
+            showSaveStatus();
+        }
+        
+        console.log('데이터 메모리 저장 완료, 회원 수:', Object.keys(users).length);
+        return true;
+    } catch (error) {
+        console.error('저장 실패:', error);
+        alert('데이터 저장에 실패했습니다: ' + error.message);
+        return false;
+    }
 }
 
 function showSaveStatus() {
-    const status = document.getElementById('saveStatus');
-    status.textContent = '✅ 메모리에 저장됨';
-    status.classList.add('show');
-    setTimeout(() => {
-        status.classList.remove('show');
-    }, 2000);
+    const status = document.getElementById('saveStatus');
+    status.textContent = '✅ 메모리에 저장됨';
+    status.classList.add('show');
+    setTimeout(() => {
+        status.classList.remove('show');
+    }, 2000);
 }
 
 function getDateStatus(endDate) {
-    const today = new Date();
-    const end = new Date(endDate);
-    const diff = Math.ceil((end - today) / (1000*60*60*24));
-    
-    if (diff > 7) return { text: '✅ 진행중', class: 'green' };
-    if (diff > 0) return { text: `⚠️ ${diff}일 남음`, class: 'red' };
-    return { text: '❌ 종료됨', class: 'red' };
+    const today = new Date();
+    const end = new Date(endDate);
+    today.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((end - today) / (1000*60*60*24));
+    
+    if (diff > 7) return { text: '✅ 진행중', class: 'green' };
+    if (diff >= 0) return { text: `⚠️ ${diff}일 남음`, class: 'red' };
+    return { text: '❌ 종료됨', class: 'red' };
 }
 
 function searchUser() {
-    const id = document.getElementById("userSearch").value.trim();
-    const box = document.getElementById("searchResult");
-    
-    if (!id) {
-        box.innerHTML = '<span class="red">❌ 아이디를 입력해주세요.</span>';
-        return;
-    }
-    
-    const user = users[id];
-    if (!user) {
-        box.innerHTML = '<span class="red">❌ 등록되지 않은 아이디입니다.</span>';
-        return;
-    }
-    
-    const status = getDateStatus(user.end);
-    const today = new Date();
-    const end = new Date(user.end);
-    const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-    
-    let msg = `
-        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">
-            <h4 style="color: #2c3e50; margin-bottom: 10px;">🎯 조회 결과</h4>
-            <p><strong>🆔 아이디:</strong> <span class="blue">${id}</span></p>
-            <p><strong>🗓️ 시작일:</strong> ${user.start}</p>
-            <p><strong>📅 종료일:</strong> ${user.end}</p>
-            <p><strong>📊 상태:</strong> <span class="${status.class}">${status.text}</span></p>
-    `;
-    
-    if (diff > 0) {
-        msg += `<p><strong>⏰ 남은 기간:</strong> <span class="red">${diff}일</span></p>`;
-    } else {
-        msg += '<p class="red"><strong>🔒 이용 기간이 종료되었습니다. 결제 후 카톡 멘션 주세요!</strong></p>';
-    }
-    
-    msg += '</div>';
-    box.innerHTML = msg;
+    const id = document.getElementById("userSearch").value.trim();
+    const box = document.getElementById("searchResult");
+    
+    if (!id) {
+        box.innerHTML = '<span class="red">❌ 아이디를 입력해주세요.</span>';
+        return;
+    }
+    
+    const user = users[id];
+    if (!user) {
+        box.innerHTML = '<span class="red">❌ 등록되지 않은 아이디입니다.</span>';
+        return;
+    }
+    
+    const status = getDateStatus(user.end);
+    const today = new Date();
+    const end = new Date(user.end);
+    today.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+    
+    let msg = `
+        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">
+            <h4 style="color: #2c3e50; margin-bottom: 10px;">🎯 조회 결과</h4>
+            <p><strong>🆔 아이디:</strong> <span class="blue">${id}</span></p>
+            <p><strong>🗓️ 시작일:</strong> ${user.start}</p>
+            <p><strong>📅 종료일:</strong> ${user.end}</p>
+            <p><strong>📊 상태:</strong> <span class="${status.class}">${status.text}</span></p>
+    `;
+    
+    if (diff >= 0) {
+        msg += `<p><strong>⏰ 남은 기간:</strong> <span class="red">${diff}일</span></p>`;
+    } else {
+        msg += '<p class="red"><strong>🔒 이용 기간이 종료되었습니다. 결제 후 카톡 멘션 주세요!</strong></p>';
+    }
+    
+    msg += '</div>';
+    box.innerHTML = msg;
 }
 
 function loginAdmin() {
-    const pw = document.getElementById("adminPass").value.trim();
-    if (pw === ADMIN_PASSWORD) {
-        document.getElementById("adminPanel").style.display = "block";
-        isLoggedIn = true;
-        loadTable();
-        alert("🎉 관리자 로그인 성공!");
-        document.getElementById("adminPass").value = "";
-    } else {
-        alert("❌ 비밀번호가 틀렸습니다.");
-    }
+    const pw = document.getElementById("adminPass").value.trim();
+    if (pw === ADMIN_PASSWORD) {
+        document.getElementById("adminPanel").style.display = "block";
+        isLoggedIn = true;
+        loadTable();
+        alert("🎉 관리자 로그인 성공!");
+        document.getElementById("adminPass").value = "";
+    } else {
+        alert("❌ 비밀번호가 틀렸습니다.");
+    }
 }
 
 function loadTable() {
-    const body = document.querySelector("#userTable tbody");
-    body.innerHTML = "";
-    
-    const keys = Object.keys(users).sort();
-    document.getElementById("memberCount").innerHTML = `
-        <div style="text-align: center; font-size: 18px;">
-            <strong>👥 총 회원 수: <span class="blue">${keys.length}명</span></strong>
-        </div>
-    `;
-    
-    keys.forEach(function(id) {
-        const status = getDateStatus(users[id].end);
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><strong>${id}</strong></td>
-            <td>${users[id].start}</td>
-            <td>${users[id].end}</td>
-            <td><span class="${status.class}">${status.text}</span></td>
-            <td class="table-actions">
-                <button class="edit-btn" onclick="editUser('${id}')">✏️ 수정</button>
-                <button class="delete-btn" onclick="deleteUser('${id}')">🗑️ 삭제</button>
-            </td>
-        `;
-        body.appendChild(row);
-    });
+    const body = document.querySelector("#userTable tbody");
+    body.innerHTML = "";
+    
+    const keys = Object.keys(users).sort();
+    document.getElementById("memberCount").innerHTML = `
+        <div style="text-align: center; font-size: 18px;">
+            <strong>👥 총 회원 수: <span class="blue">${keys.length}명</span></strong>
+        </div>
+    `;
+    
+    keys.forEach(function(id) {
+        const status = getDateStatus(users[id].end);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${id}</strong></td>
+            <td>${users[id].start}</td>
+            <td>${users[id].end}</td>
+            <td><span class="${status.class}">${status.text}</span></td>
+            <td class="table-actions">
+                <button class="edit-btn" onclick="editUser('${id}')">✏️ 수정</button>
+                <button class="delete-btn" onclick="deleteUser('${id}')">🗑️ 삭제</button>
+            </td>
+        `;
+        body.appendChild(row);
+    });
 }
 
 function addUser() {
-    const id = document.getElementById("newId").value.trim();
-    const start = document.getElementById("startDate").value;
-    const end = document.getElementById("endDate").value;
-    
-    if (!id || !start || !end) {
-        alert("❌ 모든 항목을 입력하세요.");
-        return;
-    }
-    
-    if (new Date(start) > new Date(end)) {
-        alert("❌ 시작일이 종료일보다 늦을 수 없습니다.");
-        return;
-    }
-    
-    const isEdit = !!users[id];
-    users[id] = { start: start, end: end };
-    hasUnsavedChanges = true;
-    
-    const saved = saveUsersToMemory();
-    if (saved) {
-        loadTable();
-        document.getElementById("newId").value = "";
-        document.getElementById("startDate").value = "";
-        document.getElementById("endDate").value = "";
-        
-        const message = isEdit ? `✅ ${id} 정보가 수정되었습니다.` : `✅ ${id}가 추가되었습니다.`;
-        alert(message);
-    }
+    const id = document.getElementById("newId").value.trim();
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+    
+    if (!id || !start || !end) {
+        alert("❌ 모든 항목을 입력하세요.");
+        return;
+    }
+    
+    if (new Date(start) > new Date(end)) {
+        alert("❌ 시작일이 종료일보다 늦을 수 없습니다.");
+        return;
+    }
+    
+    const isEdit = !!users[id];
+    users[id] = { start: start, end: end };
+    hasUnsavedChanges = true;
+    
+    const saved = saveUsersToMemory();
+    if (saved) {
+        loadTable();
+        document.getElementById("newId").value = "";
+        document.getElementById("startDate").value = "";
+        document.getElementById("endDate").value = "";
+        
+        const message = isEdit ? `✅ ${id} 정보가 수정되었습니다.` : `✅ ${id}가 추가되었습니다.`;
+        alert(message);
+    }
 }
 
 function editUser(id) {
-    document.getElementById("newId").value = id;
-    document.getElementById("startDate").value = users[id].start;
-    document.getElementById("endDate").value = users[id].end;
-    
-    document.getElementById("newId").scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => {
-        document.getElementById("newId").focus();
-    }, 500);
+    document.getElementById("newId").value = id;
+    document.getElementById("startDate").value = users[id].start;
+    document.getElementById("endDate").value = users[id].end;
+    
+    document.getElementById("newId").scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+        document.getElementById("newId").focus();
+    }, 500);
 }
 
 function deleteUser(id) {
-    if (confirm(`❓ "${id}"을(를) 정말 삭제하시겠습니까?`)) {
-        delete users[id];
-        hasUnsavedChanges = true;
-        const saved = saveUsersToMemory();
-        if (saved) {
-            loadTable();
-            alert(`✅ ${id}가 삭제되었습니다.`);
-        }
-    }
+    if (confirm(`❓ "${id}"을(를) 정말 삭제하시겠습니까?`)) {
+        delete users[id];
+        hasUnsavedChanges = true;
+        const saved = saveUsersToMemory();
+        if (saved) {
+            loadTable();
+            alert(`✅ ${id}가 삭제되었습니다.`);
+        }
+    }
 }
 
 function checkExpiringUsers() {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    const expiresToday = [], expiresTomorrow = [], expired = [], expiringSoon = [];
-    
-    Object.keys(users).forEach(id => {
-        const endDate = new Date(users[id].end);
-        const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
-        
-        if (diffDays === 0) expiresToday.push({id, ...users[id], diffDays});
-        else if (diffDays === 1) expiresTomorrow.push({id, ...users[id], diffDays});
-        else if (diffDays < 0) expired.push({id, ...users[id], diffDays: Math.abs(diffDays)});
-        else if (diffDays <= 7) expiringSoon.push({id, ...users[id], diffDays});
-    });
-    
-    let html = `<h5>📊 ${today.toLocaleDateString('ko-KR')} 알림 현황</h5>`;
-    
-    if (expiresToday.length > 0) {
-        html += `<div class="urgent"><strong>🔴 오늘 종료 (${expiresToday.length}명)</strong><br>${expiresToday.map(u => '@'+u.id).join(' ')}</div>`;
-    }
-    
-    if (expiresTomorrow.length > 0) {
-        html += `<div class="urgent"><strong>⚠️ 내일 종료 (${expiresTomorrow.length}명)</strong><br>${expiresTomorrow.map(u => '@'+u.id).join(' ')}</div>`;
-    }
-    
-    if (expiringSoon.length > 0) {
-        html += `<div class="warning"><strong>📢 곧 종료 예정 (2-7일, ${expiringSoon.length}명)</strong><br>${expiringSoon.map(u => `@${u.id}(${u.diffDays}일)`).join(' ')}</div>`;
-    }
-    
-    if (expired.length > 0) {
-        html += `<div class="urgent"><strong>❌ 이미 종료됨 (${expired.length}명)</strong><br>${expired.map(u => `@${u.id}(${u.diffDays}일전)`).join(' ')}</div>`;
-    }
-    
-    if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expired.length === 0 && expiringSoon.length === 0) {
-        html += '<div class="green" style="padding: 15px; text-align: center; font-size: 16px;"><strong>✅ 오늘 알림할 회원이 없습니다!</strong></div>';
-    }
-    
-    document.getElementById('alertResult').innerHTML = html;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    
+    const expiresToday = [], expiresTomorrow = [], expired = [], expiringSoon = [];
+    
+    Object.keys(users).forEach(id => {
+        const endDate = new Date(users[id].end);
+        endDate.setHours(0,0,0,0);
+        const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
+        
+        if (diffDays === 0) expiresToday.push({id, ...users[id]});
+        else if (diffDays === 1) expiresTomorrow.push({id, ...users[id]});
+        else if (diffDays < 0) expired.push({id, ...users[id], daysPassed: Math.abs(diffDays)});
+        else if (diffDays <= 7) expiringSoon.push({id, ...users[id], diffDays});
+    });
+    
+    let html = `<h5>📊 ${today.toLocaleDateString('ko-KR')} 알림 현황</h5>`;
+    
+    if (expiresToday.length > 0) {
+        html += `<div class="urgent"><strong>🔴 오늘 종료 (${expiresToday.length}명)</strong><br>${expiresToday.map(u => '@'+u.id).join(' ')}</div>`;
+    }
+    
+    if (expiresTomorrow.length > 0) {
+        html += `<div class="urgent"><strong>⚠️ 내일 종료 (${expiresTomorrow.length}명)</strong><br>${expiresTomorrow.map(u => '@'+u.id).join(' ')}</div>`;
+    }
+    
+    if (expiringSoon.length > 0) {
+        html += `<div class="warning"><strong>📢 곧 종료 예정 (2-7일, ${expiringSoon.length}명)</strong><br>${expiringSoon.sort((a,b) => a.diffDays - b.diffDays).map(u => `@${u.id}(${u.diffDays}일)`).join(' ')}</div>`;
+    }
+    
+    if (expired.length > 0) {
+        html += `<div class="urgent"><strong>❌ 이미 종료됨 (${expired.length}명)</strong><br>${expired.map(u => `@${u.id}(${u.daysPassed}일전)`).join(' ')}</div>`;
+    }
+    
+    if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expiringSoon.length === 0) {
+        html += '<div class="green" style="padding: 15px; text-align: center; font-size: 16px;"><strong>✅ 오늘 알림할 회원이 없습니다!</strong></div>';
+    }
+    
+    document.getElementById('alertResult').innerHTML = html;
 }
 
 function generateKakaoMessages() {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    const expiresToday = [], expiresTomorrow = [], expired = [];
-    
-    Object.keys(users).forEach(id => {
-        const endDate = new Date(users[id].end);
-        const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
-        
-        if (diffDays === 0) expiresToday.push(id);
-        else if (diffDays === 1) expiresTomorrow.push(id);
-        else if (diffDays < 0) expired.push(id);
-    });
-    
-    let html = '<h5>💬 카카오톡 메시지 템플릿</h5>';
-    
-    const createMsgBox = (text, title) => `
-        <div style="margin: 15px 0;">
-            <h6 style="color: #2c3e50; margin-bottom: 8px;">${title}</h6>
-            <div class="message-box">
-                ${text}
-                <button class="copy-btn" onclick="copyText(\`${text.replace(/`/g, '\\`')}\`)">📋 복사</button>
-            </div>
-        </div>
-    `;
-    
-    if (expiresToday.length > 0) {
-        const msg = `${expiresToday.map(id => '@' + id).join(' ')}\n\n🔴 오늘(${today.toLocaleDateString('ko-KR')}) 이용기간이 종료됩니다.\n결제 후 카톡 멘션 주세요! 💳`;
-        html += createMsgBox(msg, '🔴 오늘 종료 메시지');
-    }
-    
-    if (expiresTomorrow.length > 0) {
-        const msg = `${expiresTomorrow.map(id => '@' + id).join(' ')}\n\n⚠️ 내일(${tomorrow.toLocaleDateString('ko-KR')}) 이용기간이 종료됩니다.\n미리 결제해주세요! 💳`;
-        html += createMsgBox(msg, '⚠️ 내일 종료 메시지');
-    }
-    
-    if (expired.length > 0) {
-        const msg = `${expired.map(id => '@' + id).join(' ')}\n\n❌ 이용기간이 종료되었습니다.\n결제 후 카톡 멘션 주세요! 💳`;
-        html += createMsgBox(msg, '❌ 이미 종료 메시지');
-    }
-    
-    if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expired.length === 0) {
-        html += '<div class="green" style="padding: 15px; text-align: center; font-size: 16px;"><strong>✅ 오늘 보낼 카톡 메시지가 없습니다!</strong></div>';
-    }
-    
-    document.getElementById('alertResult').innerHTML = html;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const expiresToday = [], expiresTomorrow = [], expired = [];
+    
+    Object.keys(users).forEach(id => {
+        const endDate = new Date(users[id].end);
+        endDate.setHours(0,0,0,0);
+        const diffDays = Math.ceil((endDate - today) / (1000*60*60*24));
+        
+        if (diffDays === 0) expiresToday.push(id);
+        else if (diffDays === 1) expiresTomorrow.push(id);
+        else if (diffDays < 0) expired.push(id);
+    });
+    
+    let html = '<h5>💬 카카오톡 메시지 템플릿</h5>';
+    
+    const createMsgBox = (text, title) => `
+        <div style="margin: 15px 0;">
+            <h6 style="color: #2c3e50; margin-bottom: 8px;">${title}</h6>
+            <div class="message-box">
+                ${text}
+                <button class="copy-btn" onclick="copyText(\`${text.replace(/`/g, '\\`')}\`)">📋 복사</button>
+            </div>
+        </div>
+    `;
+    
+    if (expiresToday.length > 0) {
+        const msg = `${expiresToday.map(id => '@' + id).join(' ')}\n\n🔴 오늘(${today.toLocaleDateString('ko-KR')}) 이용기간이 종료됩니다.\n결제 후 카톡 멘션 주세요! 💳`;
+        html += createMsgBox(msg, '🔴 오늘 종료 메시지');
+    }
+    
+    if (expiresTomorrow.length > 0) {
+        const msg = `${expiresTomorrow.map(id => '@' + id).join(' ')}\n\n⚠️ 내일(${tomorrow.toLocaleDateString('ko-KR')}) 이용기간이 종료됩니다.\n미리 결제해주세요! 💳`;
+        html += createMsgBox(msg, '⚠️ 내일 종료 메시지');
+    }
+    
+    if (expired.length > 0) {
+        const msg = `${expired.map(id => '@' + id).join(' ')}\n\n❌ 이용기간이 종료되었습니다.\n결제 후 카톡 멘션 주세요! 💳`;
+        html += createMsgBox(msg, '❌ 이미 종료 메시지');
+    }
+    
+    if (expiresToday.length === 0 && expiresTomorrow.length === 0 && expired.length === 0) {
+        html += '<div class="green" style="padding: 15px; text-align: center; font-size: 16px;"><strong>✅ 오늘 보낼 카톡 메시지가 없습니다!</strong></div>';
+    }
+    
+    document.getElementById('alertResult').innerHTML = html;
 }
 
 function copyText(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-            alert('📋 메시지가 클립보드에 복사되었습니다!');
-        }).catch(err => {
-            console.error('복사 실패:', err);
-            fallbackCopyText(text);
-        });
-    } else {
-        fallbackCopyText(text);
-    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('📋 메시지가 클립보드에 복사되었습니다!');
+        }).catch(err => {
+            console.error('복사 실패:', err);
+            fallbackCopyText(text);
+        });
+    } else {
+        fallbackCopyText(text);
+    }
 }
 
 function fallbackCopyText(text) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-        document.execCommand('copy');
-        alert('📋 메시지가 복사되었습니다!');
-    } catch (err) {
-        console.error('복사 실패:', err);
-        alert('❌ 복사에 실패했습니다. 수동으로 복사해주세요.');
-    }
-    
-    document.body.removeChild(textArea);
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        alert('📋 메시지가 복사되었습니다!');
+    } catch (err) {
+        console.error('복사 실패:', err);
+        alert('❌ 복사에 실패했습니다. 수동으로 복사해주세요.');
+    }
+    
+    document.body.removeChild(textArea);
 }
 
 function saveToTxt() {
-    try {
-        const keys = Object.keys(users).sort();
-        let text = "아이디\t시작일\t종료일\t상태\n";
-        text += "=====================================\n";
-        
-        keys.forEach(function(id) {
-            const status = getDateStatus(users[id].end);
-            text += `${id}\t${users[id].start}\t${users[id].end}\t${status.text}\n`;
-        });
-        
-        text += `\n총 회원 수: ${keys.length}명\n`;
-        text += `생성일: ${new Date().toLocaleString('ko-KR')}\n`;
-        
-        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `채움스댓공_회원목록_${new Date().toISOString().slice(0,10)}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        alert('📄 TXT 파일이 다운로드되었습니다.');
-    } catch (error) {
-        console.error('TXT 저장 실패:', error);
-        alert('❌ 파일 저장에 실패했습니다.');
-    }
+    try {
+        const keys = Object.keys(users).sort();
+        let text = "아이디\t시작일\t종료일\t상태\n";
+        text += "=====================================\n";
+        
+        keys.forEach(function(id) {
+            const status = getDateStatus(users[id].end);
+            text += `${id}\t${users[id].start}\t${users[id].end}\t${status.text}\n`;
+        });
+        
+        text += `\n총 회원 수: ${keys.length}명\n`;
+        text += `생성일: ${new Date().toLocaleString('ko-KR')}\n`;
+        
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `채움스댓공_회원목록_${new Date().toISOString().slice(0,10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        alert('📄 TXT 파일이 다운로드되었습니다.');
+    } catch (error) {
+        console.error('TXT 저장 실패:', error);
+        alert('❌ 파일 저장에 실패했습니다.');
+    }
 }
 
 function backupData() {
-    try {
-        const backupData = {
-            users: users,
-            timestamp: new Date().toISOString(),
-            version: "2.0",
-            totalUsers: Object.keys(users).length
-        };
-        
-        const dataStr = JSON.stringify(backupData, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `채움스댓공_백업_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        alert('💾 백업 파일이 다운로드되었습니다.');
-    } catch (error) {
-        console.error('백업 실패:', error);
-        alert('❌ 백업에 실패했습니다.');
-    }
+    try {
+        const backupData = {
+            users: users,
+            timestamp: new Date().toISOString(),
+            version: "2.0",
+            totalUsers: Object.keys(users).length
+        };
+        
+        const dataStr = JSON.stringify(backupData, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `채움스댓공_백업_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        alert('💾 백업 파일이 다운로드되었습니다.');
+    } catch (error) {
+        console.error('백업 실패:', error);
+        alert('❌ 백업에 실패했습니다.');
+    }
 }
 
 function restoreData(input) {
-    const file = input.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            
-            // 백업 파일 형식 확인
-            let userData;
-            if (data.users && data.version) {
-                // 새로운 백업 형식
-                userData = data.users;
-            } else if (typeof data === 'object' && !Array.isArray(data)) {
-                // 이전 형식 또는 직접 사용자 데이터
-                userData = data;
-            } else {
-                throw new Error('지원하지 않는 파일 형식입니다.');
-            }
-            
-            // 데이터 유효성 검사
-            if (!userData || typeof userData !== 'object') {
-                throw new Error('잘못된 데이터 형식입니다.');
-            }
-            
-            // 사용자 데이터 검증
-            for (const [id, user] of Object.entries(userData)) {
-                if (!user.start || !user.end || typeof user.start !== 'string' || typeof user.end !== 'string') {
-                    throw new Error(`사용자 "${id}"의 데이터가 올바르지 않습니다.`);
-                }
-            }
-            
-            users = userData;
-            hasUnsavedChanges = true;
-            const saved = saveUsersToMemory();
-            
-            if (saved) {
-                loadTable();
-                alert(`✅ 데이터가 성공적으로 복원되었습니다!\n복원된 회원 수: ${Object.keys(users).length}명`);
-            }
-        } catch (error) {
-            console.error('복원 실패:', error);
-            alert('❌ 복원에 실패했습니다: ' + error.message);
-        }
-    };
-    
-    reader.onerror = function() {
-        alert('❌ 파일을 읽는 중 오류가 발생했습니다.');
-    };
-    
-    reader.readAsText(file);
-    input.value = '';
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            // 백업 파일 형식 확인
+            let userData;
+            if (data.users && data.version) {
+                // 새로운 백업 형식
+                userData = data.users;
+            } else if (typeof data === 'object' && !Array.isArray(data)) {
+                // 이전 형식 또는 직접 사용자 데이터
+                userData = data;
+            } else {
+                throw new Error('지원하지 않는 파일 형식입니다.');
+            }
+            
+            // 데이터 유효성 검사
+            if (!userData || typeof userData !== 'object') {
+                throw new Error('잘못된 데이터 형식입니다.');
+            }
+            
+            // 사용자 데이터 검증
+            for (const [id, user] of Object.entries(userData)) {
+                if (!user.start || !user.end || typeof user.start !== 'string' || typeof user.end !== 'string') {
+                    throw new Error(`사용자 "${id}"의 데이터가 올바르지 않습니다.`);
+                }
+            }
+            
+            users = userData;
+            hasUnsavedChanges = true;
+            const saved = saveUsersToMemory();
+            
+            if (saved) {
+                loadTable();
+                alert(`✅ 데이터가 성공적으로 복원되었습니다!\n복원된 회원 수: ${Object.keys(users).length}명`);
+            }
+        } catch (error) {
+            console.error('복원 실패:', error);
+            alert('❌ 복원에 실패했습니다: ' + error.message);
+        }
+    };
+    
+    reader.onerror = function() {
+        alert('❌ 파일을 읽는 중 오류가 발생했습니다.');
+    };
+    
+    reader.readAsText(file);
+    input.value = '';
 }
 
 function resetToDefault() {
-    if (confirm('⚠️ 모든 데이터를 초기값으로 복원하시겠습니까?\n\n현재 데이터는 모두 삭제되며 되돌릴 수 없습니다.')) {
-        users = JSON.parse(JSON.stringify(defaultUsers));
-        hasUnsavedChanges = true;
-        const saved = saveUsersToMemory();
-        
-        if (saved) {
-            loadTable();
-            alert('🔄 초기 데이터로 복원되었습니다.');
-        }
-    }
+    if (confirm('⚠️ 모든 데이터를 초기값으로 복원하시겠습니까?\n\n현재 데이터는 모두 삭제되며 되돌릴 수 없습니다.')) {
+        users = JSON.parse(JSON.stringify(defaultUsers));
+        hasUnsavedChanges = true;
+        const saved = saveUsersToMemory();
+        
+        if (saved) {
+            loadTable();
+            alert('🔄 초기 데이터로 복원되었습니다.');
+        }
+    }
 }
 
 function manualSave() {
-    const saved = saveUsersToMemory();
-    if (saved) {
-        alert(`✅ 모든 변경사항이 메모리에 저장되었습니다!\n\n현재 회원 수: ${Object.keys(users).length}명\n저장 시간: ${new Date().toLocaleString('ko-KR')}\n\n⚠️ 주의: 브라우저를 새로고침하거나 닫으면 데이터가 사라집니다.\n중요한 데이터는 백업 기능을 사용해주세요!`);
-    } else {
-        alert('❌ 저장에 실패했습니다. 다시 시도해주세요.');
-    }
+    const saved = saveUsersToMemory();
+    if (saved) {
+        alert(`✅ 모든 변경사항이 메모리에 저장되었습니다!\n\n현재 회원 수: ${Object.keys(users).length}명\n저장 시간: ${new Date().toLocaleString('ko-KR')}\n\n⚠️ 주의: 브라우저를 새로고침하거나 닫으면 데이터가 사라집니다.\n중요한 데이터는 백업 기능을 사용해주세요!`);
+    } else {
+        alert('❌ 저장에 실패했습니다. 다시 시도해주세요.');
+    }
 }
 
 // 디버깅을 위한 함수들
 function checkStorageStatus() {
-    console.log('=== 메모리 저장소 상태 확인 ===');
-    console.log('현재 메모리의 사용자 수:', Object.keys(users).length);
-    console.log('저장되지 않은 변경사항:', hasUnsavedChanges);
-    console.log('로그인 상태:', isLoggedIn);
-    console.log('사용자 목록:', Object.keys(users));
-    console.log('===============================');
+    console.log('=== 메모리 저장소 상태 확인 ===');
+    console.log('현재 메모리의 사용자 수:', Object.keys(users).length);
+    console.log('저장되지 않은 변경사항:', hasUnsavedChanges);
+    console.log('로그인 상태:', isLoggedIn);
+    console.log('사용자 목록:', Object.keys(users));
+    console.log('===============================');
 }
 
 // 개발자 도구에서 사용할 수 있도록 전역으로 노출
